@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><documents><document><name><![CDATA[Xml Report Reader Test]]></name><external-link><![CDATA[http://server/XmlReportReaderTest]]></external-link><time-statistics><execution>195</execution><total>336</total></time-statistics><statistics><success>10</success><failure>3</failure><error>1</error><ignored>7</ignored></statistics><results>html-result</results><global-exception><![CDATA[java.lang.NullPointerException
+ info.novatec.testit.livingdoc.interpreter.ListOfInterpreter.execute(ListOfInterpreter.java:96)
+ info.novatec.testit.livingdoc.interpreter.collection.CollectionInterpreter.interpret(CollectionInterpreter.java:230)
+ info.novatec.testit.livingdoc.document.Document.execute(Document.java:92)
+ info.novatec.testit.livingdoc.interpreter.flow.dowith.InterpretRow.interpret(InterpretRow.java:55)
+ info.novatec.testit.livingdoc.interpreter.flow.AbstractFlowInterpreter.execute(AbstractFlowInterpreter.java:65)
+ info.novatec.testit.livingdoc.interpreter.flow.AbstractFlowInterpreter.interpret(AbstractFlowInterpreter.java:39)
+ info.novatec.testit.livingdoc.document.Document.execute(Document.java:92)
+ info.novatec.testit.livingdoc.runner.DocumentRunner.run(DocumentRunner.java:106)
+ info.novatec.testit.livingdoc.runner.CommandLineRunner.runSpec(CommandLineRunner.java:88)
+ info.novatec.testit.livingdoc.runner.CommandLineRunner.run(CommandLineRunner.java:78)
+ info.novatec.testit.livingdoc.runner.Main.main(Main.java:33)]]></global-exception></document></documents>
+

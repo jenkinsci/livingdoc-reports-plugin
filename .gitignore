@@ -1,4 +1,13 @@
 .project
 .classpath
+.eclipse-pmd
+NOTICE
+**/.settings/
 /.settings/
-/target/
+
+**/.metadata/
+**/target/
+
+target
+work
+*.class

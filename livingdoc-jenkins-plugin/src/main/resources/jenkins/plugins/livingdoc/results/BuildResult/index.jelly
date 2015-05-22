@@ -1,0 +1,35 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+		 xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+	<st:contentType value="text/html"/>
+	&lt;!DOCTYPE html&gt;
+	<html>
+		<head>
+			<meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+			<link href="${rootURL}/css/style.css" rel="stylesheet" type="text/css"/>
+			<link href="${rootURL}/plugin/livingdoc/css/confluence-table.css" rel="stylesheet" type="text/css"/>
+		</head>
+		<body style="font-family:Arial,Helvetica,sans-serif; font-size:75%;">
+			<table class="pane" width="100%">
+				<tbody>
+					<tr>
+						<td class="pane-header" style="text-align: center;">
+							<j:choose>
+								<j:when test="${it.report.externalUrl != null}">
+									<a id="ld_build_${it.report.id}_extlink" href="${it.report.externalUrl}"
+									   title="View the actual specification">${it.report.name}</a>
+								</j:when>
+								<j:otherwise>
+									${it.report.name}
+								</j:otherwise>
+							</j:choose>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;"><span id="ld_build_${it.report.id}_stats">${it.report.statistics}</span></td>
+					</tr>
+				</tbody>
+			</table>
+			${it.result}
+		</body>
+	</html>
+</j:jelly>

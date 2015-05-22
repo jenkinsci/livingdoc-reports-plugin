@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><documents><document><name><![CDATA[Story 1]]></name><external-link><![CDATA[http://www.greenpeppersoftware.com/confluence/display/BNKT/Story+1]]></external-link><time-statistics><execution>273</execution><total>512</total></time-statistics><statistics><success>8</success><failure>4</failure><error>0</error><ignored>0</ignored></statistics><results><![CDATA[<html>
+<head>
+<title>Story 1</title>
+<meta name="title" content="Story 1"/>
+<meta name="external-link" content="http://www.greenpeppersoftware.com/confluence/display/BNKT/Story+1"/>
+</head>
+<body>
+<table style="display:none">
+	<tr>
+		<td>Begin Info</td>
+	</tr>
+</table>
+<div style="padding:0px; margin:0px; ">
+		
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> <b>Story #1:</b> </th>
+<th class='confluenceTh'> The bank representative is allowed to create two types of accounts: Checking and Saving. </th>
+</tr>
+<tr>
+<td class='confluenceTd'> <b>Actor:</b> </td>
+<td class='confluenceTd'> Bank representative </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <b>Business rules:</b> </td>
+<td class='confluenceTd'><ul>
+	<li>The user create checking account with a specific account number</li>
+	<li>The user create saving account with a specific account number</li>
+	<li>The system make sure that the balance of new bank account is set to 0.00$.</li>
+</ul>
+</td>
+</tr>
+</tbody></table>
+</div>
+<table style="display:none">
+	<tr>
+		<td>End Info</td>
+	</tr>
+</table>
+
+
+<hr />
+
+<p><b>Example:</b><br/>
+Creation of accounts</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'> Do With </td>
+<td class='confluenceTd'> Bank </td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> Open </td>
+<td class='confluenceTd'> checking </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> account </td>
+<td class='confluenceTd'> 12345-6780 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> under the name of </td>
+<td class='confluenceTd'> Fred </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> </td>
+<td class='confluenceTd'> Flintstone </td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> Open </td>
+<td class='confluenceTd'> savings </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> account </td>
+<td class='confluenceTd'> 12345-99999 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> under the name of </td>
+<td class='confluenceTd'> Wilma </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> </td>
+<td class='confluenceTd'> Flintstone </td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> Open </td>
+<td class='confluenceTd'> checking </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> account </td>
+<td class='confluenceTd'> 11112-59595 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> under the name of </td>
+<td class='confluenceTd'> Barney </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> </td>
+<td class='confluenceTd'> Rubble </td>
+</tr>
+</tbody></table>
+<p>Check if the account exist</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'> Set of </td>
+<td class='confluenceTd'> opened accounts </td>
+</tr>
+<tr>
+<th class='confluenceTh'> Number </th>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #FFAAAA;"><em>Missing</em> 12345-67890</td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 12345-99999 </td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 11112-59595 </td>
+</tr><tr><td style="background-color: #FFAAAA;"><em>Surplus</em> 12345-6780</td></tr></table>
+<p>Check the kind of account with their owner and balance</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'> Set of </td>
+<td class='confluenceTd'> opened accounts </td>
+</tr>
+<tr>
+<th class='confluenceTh'> Number </th>
+<th class='confluenceTh'> Type </th>
+<th class='confluenceTh'> Owner Name </th>
+<th class='confluenceTh'> Balance </th>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #FFAAAA;"><em>Missing</em> 12345-67890</td>
+<td class='confluenceTd' style="background-color: #FFAAAA;"><em>Missing</em> checking</td>
+<td class='confluenceTd' style="background-color: #FFAAAA;"><em>Missing</em> Fred Flintstone</td>
+<td class='confluenceTd' style="background-color: #FFAAAA;"><em>Missing</em> $0.00</td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 12345-99999 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> savings </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> Wilma Flintstone </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> $0.00 </td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 11112-59595 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> checking </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> Barney Rubble </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> $0.00 </td>
+</tr><tr><td style="background-color: #FFAAAA;"><em>Surplus</em> 12345-6780</td><td style="background-color: #FFAAAA;"><em>Surplus</em> checking</td><td style="background-color: #FFAAAA;"><em>Surplus</em> Fred Flintstone</td><td style="background-color: #FFAAAA;"><em>Surplus</em> $0</td></tr></table>
+
+<p>Check if a particular subset of accounts exist</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'> Subset of </td>
+<td class='confluenceTd'> opened accounts </td>
+</tr>
+<tr>
+<th class='confluenceTh'> Number </th>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 12345-99999 </td>
+</tr>
+</tbody></table>
+<p><em>Notice that if one of the specified accounts doesn't exist, it is noted missing in the result table.</em></p>
+</body>
+</html>]]></results></document></documents>
