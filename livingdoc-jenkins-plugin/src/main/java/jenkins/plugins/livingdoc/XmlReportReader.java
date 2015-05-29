@@ -30,7 +30,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.ctc.wstx.stax.WstxInputFactory;
@@ -94,12 +93,9 @@ public class XmlReportReader {
 
         this.name = getFilenameWithoutExtension(fileReport);
 
-        FileReader fileReader = null;
-        XMLEventReader xmlEventReader = null;
+        try (FileReader fileReader = new FileReader(new File(fileReport.toURI()))) {
 
-        try {
-            fileReader = new FileReader(new File(fileReport.toURI()));
-            xmlEventReader = XIF.createXMLEventReader(fileReader);
+            XMLEventReader xmlEventReader = XIF.createXMLEventReader(fileReader);
 
             while (xmlEventReader.hasNext()) {
                 final XMLEvent event = xmlEventReader.nextEvent();
@@ -157,24 +153,13 @@ public class XmlReportReader {
                     }
                 }
             }
-        } catch (Exception ex) {
-            throw new IOException(String.format("Cannot read xml report file %s", fileReport), ex);
-        } finally {
-            IOUtils.closeQuietly(fileReader);
-            closeQuietly(xmlEventReader);
+        } catch (InterruptedException e) {
+            throw new IOException(String.format("Cannot create file %s", fileReport), e);
+        } catch (XMLStreamException e) {
+            throw new IOException(String.format("Cannot read xml report file %s", fileReport), e);
         }
 
         return this;
-    }
-
-    private static void closeQuietly (XMLEventReader reader) {
-        if (reader != null) {
-            try {
-                reader.close();
-            } catch (XMLStreamException e) {
-                // ignore
-            }
-        }
     }
 
     private static int readInteger (XMLEvent event) {
