@@ -3,14 +3,12 @@ package jenkins.plugins.livingdoc.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Properties;
 
 import jenkins.plugins.livingdoc.mapping.LivingDocBuildPage;
 import jenkins.plugins.livingdoc.mapping.LivingDocProjectConfigPage;
 import jenkins.plugins.livingdoc.mapping.LivingDocProjectPage;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -20,89 +18,76 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+
 public class JenkinsUITestCase extends JenkinsRule {
 
-	private WebDriver webDriver;
+    private WebDriver webDriver;
 
-	@Before
-	protected void setUp() throws Exception {
+    @Before
+    protected void setUp () throws Exception {
 
-		
-		// http://groups.google.com/group/webdriver/browse_thread/thread/e344d78702d78822
-		String xvfbDisplayId = getXvfbDisplayId();
-		System.setProperty("selenium.browser", "firefox");
-		if (xvfbDisplayId != null) {
-			FirefoxBinary firefox = new FirefoxBinary();
-			firefox.setEnvironmentProperty("DISPLAY", xvfbDisplayId);
-			webDriver = new FirefoxDriver(firefox, null);
-		} else {
-			FirefoxProfile firefoxProfile = new FirefoxProfile();
-			DesiredCapabilities firefoxCap = DesiredCapabilities.firefox();
-			firefoxCap.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
+        // http://groups.google.com/group/webdriver/browse_thread/thread/e344d78702d78822
+        String xvfbDisplayId = getXvfbDisplayId();
+        System.setProperty("selenium.browser", "firefox");
+        if (xvfbDisplayId != null) {
+            FirefoxBinary firefox = new FirefoxBinary();
+            firefox.setEnvironmentProperty("DISPLAY", xvfbDisplayId);
+            webDriver = new FirefoxDriver(firefox, null);
+        } else {
+            FirefoxProfile firefoxProfile = new FirefoxProfile();
+            DesiredCapabilities firefoxCap = DesiredCapabilities.firefox();
+            firefoxCap.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
 
-			webDriver = new FirefoxDriver(firefoxCap);
-		}
+            webDriver = new FirefoxDriver(firefoxCap);
+        }
 
-		/*
-		 * DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-		 * capabilities.setJavascriptEnabled(true); webDriver = new
-		 * RemoteWebDriver(new URL("http://serpens:3001/wd"), capabilities);
-		 */
-	}
+        /* DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+         * capabilities.setJavascriptEnabled(true); webDriver = new
+         * RemoteWebDriver(new URL("http://serpens:3001/wd"), capabilities); */
+    }
 
-	@After
-	protected void tearDown() throws Exception {
-		webDriver.close();
-	}
+    @After
+    protected void tearDown () throws Exception {
+        webDriver.close();
+    }
 
-	protected String getLocalHostName() throws UnknownHostException {
-		// InetAddress addr = InetAddress.getLocalHost();
-		return "localhost";// addr.getHostName();
-	}
+    protected String getLocalHostName () {
+        // InetAddress addr = InetAddress.getLocalHost();
+        // addr.getHostName();
+        return "localhost";
+    }
 
-	protected String getExternalURL() throws IOException {
-		String url = getURL().toExternalForm();
-		return url.replace("localhost", getLocalHostName());
-	}
+    protected String getExternalURL () throws IOException {
+        String url = getURL().toExternalForm();
+        return url.replace("localhost", getLocalHostName());
+    }
 
-	protected LivingDocProjectConfigPage newConfigPage(String projectName)
-			throws IOException {
-		return new LivingDocProjectConfigPage(webDriver, getExternalURL(),
-				projectName);
-	}
+    protected LivingDocProjectConfigPage newConfigPage (String projectName) throws IOException {
+        return new LivingDocProjectConfigPage(webDriver, getExternalURL(), projectName);
+    }
 
-	protected LivingDocProjectPage newProjectPage(String projectName)
-			throws IOException {
-		return new LivingDocProjectPage(webDriver, getExternalURL(),
-				projectName);
-	}
+    protected LivingDocProjectPage newProjectPage (String projectName) throws IOException {
+        return new LivingDocProjectPage(webDriver, getExternalURL(), projectName);
+    }
 
-	protected LivingDocBuildPage newBuildPage(String projectName,
-			int buildNumber) throws IOException {
-		return new LivingDocBuildPage(webDriver, getExternalURL(),
-				projectName, buildNumber);
-	}
+    protected LivingDocBuildPage newBuildPage (String projectName, int buildNumber) throws IOException {
+        return new LivingDocBuildPage(webDriver, getExternalURL(), projectName, buildNumber);
+    }
 
-	private String getXvfbDisplayId() throws IOException {
+    private String getXvfbDisplayId () throws IOException {
 
-		File displayPropertyFile = new File(
-				"target/selenium/display.properties");
+        File displayPropertyFile = new File("target/selenium/display.properties");
 
-		if (!displayPropertyFile.exists()) {
-			return null;
-		}
+        if ( ! displayPropertyFile.exists()) {
+            return null;
+        }
 
-		Properties displayProperties = new Properties();
-		FileInputStream is = null;
+        Properties displayProperties = new Properties();
 
-		try {
-			is = new FileInputStream(displayPropertyFile);
+        try (FileInputStream is = new FileInputStream(displayPropertyFile)) {
+            displayProperties.load(is);
+        }
 
-			displayProperties.load(is);
-		} finally {
-			IOUtils.closeQuietly(is);
-		}
-
-		return displayProperties.getProperty("DISPLAY", ":38");
-	}
+        return displayProperties.getProperty("DISPLAY", ":38");
+    }
 }

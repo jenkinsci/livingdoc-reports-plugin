@@ -1,20 +1,20 @@
 /**
  * Copyright (c) 2009 Pyxis Technologies inc.
- *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA,
- * or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site:
+ * http://www.fsf.org.
  */
 package jenkins.plugins.livingdoc;
 
@@ -26,63 +26,63 @@ import java.util.List;
 import com.greenpepper.Statistics;
 import com.greenpepper.TimeStatistics;
 
-public class SummaryBuildReportBean
-		implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+public class SummaryBuildReportBean implements Serializable {
 
-	private final int buildId;
-	private final BuildReportBean summary;
-	private List<BuildReportBean> buildReports = new ArrayList<BuildReportBean>();
+    private static final long serialVersionUID = 1L;
 
-	public SummaryBuildReportBean(int buildId) {
-		this.buildId = buildId;
+    private final int buildId;
+    private final BuildReportBean summary;
+    private List<BuildReportBean> buildReports = new ArrayList<BuildReportBean>();
 
-		summary = new BuildReportBean(0, buildId);
-		summary.setStatistics(new Statistics());
-		summary.setTimeStatistics(new TimeStatistics());
-	}
+    public SummaryBuildReportBean (int buildId) {
+        this.buildId = buildId;
 
-	public int getBuildId() {
-		return buildId;
-	}
+        summary = new BuildReportBean(0, buildId);
+        summary.setStatistics(new Statistics());
+        summary.setTimeStatistics(new TimeStatistics());
+    }
 
-	public Statistics getStatistics() {
-		return summary.getStatistics();
-	}
+    public int getBuildId () {
+        return buildId;
+    }
 
-	public TimeStatistics getTimeStatistics() {
-		return summary.getTimeStatistics();
-	}
+    public Statistics getStatistics () {
+        return summary.getStatistics();
+    }
 
-	public BuildReportBean getBuildSummary() {
-		return summary;
-	}
+    public TimeStatistics getTimeStatistics () {
+        return summary.getTimeStatistics();
+    }
 
-	public boolean hasNoReports() {
-		return buildReports.isEmpty();
-	}
+    public BuildReportBean getBuildSummary () {
+        return summary;
+    }
 
-	public List<BuildReportBean> getBuildReports() {
-		Collections.sort(buildReports, BuildReportBean.BY_ID);
-		return buildReports;
-	}
+    public boolean hasNoReports () {
+        return buildReports.isEmpty();
+    }
 
-	public void addBuildReport(BuildReportBean report) {
-		buildReports.add(report);
+    public List<BuildReportBean> getBuildReports () {
+        Collections.sort(buildReports, BuildReportBean.BY_ID);
+        return buildReports;
+    }
 
-		summary.getStatistics().tally(report.getStatistics());
-		summary.getTimeStatistics().tally(report.getTimeStatistics());
-	}
+    public void addBuildReport (BuildReportBean report) {
+        buildReports.add(report);
 
-	public BuildReportBean findBuildById(int id) {
+        summary.getStatistics().tally(report.getStatistics());
+        summary.getTimeStatistics().tally(report.getTimeStatistics());
+    }
 
-		for (BuildReportBean buildReport : buildReports) {
-			if (buildReport.getId() == id) {
-				return buildReport;
-			}
-		}
+    public BuildReportBean findBuildById (int id) {
 
-		return null;
-	}
+        for (BuildReportBean buildReport : buildReports) {
+            if (buildReport.getId() == id) {
+                return buildReport;
+            }
+        }
+
+        return null;
+    }
 }

@@ -1,23 +1,22 @@
 /**
  * Copyright (c) 2009 Pyxis Technologies inc.
- *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA,
- * or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site:
+ * http://www.fsf.org.
  */
 package jenkins.plugins.livingdoc;
-
 
 import hudson.model.ParameterValue;
 import hudson.model.ProminentProjectAction;
@@ -40,125 +39,127 @@ import jenkins.plugins.livingdoc.chart.ProjectSummaryChart;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
-public class LivingDocProjectAction
-		extends Actionable
-		implements ProminentProjectAction {
 
-	public static final String LD_CHART_MAX_COUNT_BUILDS = "LD_CHART_MAX_COUNT_BUILDS";
-	private static Logger LOGGER = Logger.getLogger(LivingDocProjectAction.class.getCanonicalName());
-	
-	private final AbstractProject<?, ?> project;
+public class LivingDocProjectAction extends Actionable implements ProminentProjectAction {
 
-	public LivingDocProjectAction(AbstractProject<?, ?> project) {
-		super();
-		
-		this.project = project;
-	}
+    public static final String LD_CHART_MAX_COUNT_BUILDS = "LD_CHART_MAX_COUNT_BUILDS";
+    private static Logger LOGGER = Logger.getLogger(LivingDocProjectAction.class.getCanonicalName());
 
-	public AbstractProject<?, ?> getProject() {
-		return project;
-	}
+    private final AbstractProject< ? , ? > project;
 
-	public String getIconFileName() {
-		return "/plugin/livingdoc/images/ld_32.png";
-	}
+    public LivingDocProjectAction (AbstractProject< ? , ? > project) {
+        super();
 
-	public String getSearchUrl() {
-		return getUrlName();
-	}
+        this.project = project;
+    }
 
-	public String getUrlName() {
-		return "livingdoc";
-	}
+    public AbstractProject< ? , ? > getProject () {
+        return project;
+    }
 
-	public String getDisplayName() {
-		return "testIT LivingDoc";
-	}
+    @Override
+    public String getIconFileName () {
+        return "/plugin/livingdoc/images/ld_32.png";
+    }
 
-	public List<SummaryBuildReportBean> getSummaries() {
-		return getAllLivingDocBuildSummaries();
-	}
+    @Override
+    public String getSearchUrl () {
+        return getUrlName();
+    }
 
-	public boolean hasSummaries() {
-		return getAllLivingDocBuildSummaries().size() > 0;
-	}
+    @Override
+    public String getUrlName () {
+        return "livingdoc";
+    }
 
-	public void doIndex(StaplerRequest request, StaplerResponse response)
-			throws IOException {
+    @Override
+    public String getDisplayName () {
+        return "testIT LivingDoc";
+    }
 
-		AbstractBuild<?, ?> build = findLatestLivingDocBuild();
+    public List<SummaryBuildReportBean> getSummaries () {
+        return getAllLivingDocBuildSummaries();
+    }
 
-		if (build == null) {
-			response.sendRedirect2("nodata");
-		}
-		else {
-			int buildId = build.getNumber();
-			response.sendRedirect2(String.format("../%s/livingdoc", buildId));
-		}
-	}
+    public boolean hasSummaries () {
+        return getAllLivingDocBuildSummaries().size() > 0;
+    }
 
-	public Graph getGraph() {
-		Calendar timestamp = project.getLastCompletedBuild().getTimestamp();
-		return new ProjectSummaryChart(timestamp, getAllLivingDocBuildSummaries());
-	}
-	
-	
-	private List<SummaryBuildReportBean> getAllLivingDocBuildSummaries() {
+    @SuppressWarnings ( "unused" )
+    public void doIndex (StaplerRequest request, StaplerResponse response) throws IOException {
 
-		List<SummaryBuildReportBean> summaries = new ArrayList<SummaryBuildReportBean>();
-		int maxCountBuilds = getChartMaxCountBuilds();
-		int count = 0;
-		boolean mayAddEntries = maxCountBuilds == -1 || count <= maxCountBuilds;
-		for (AbstractBuild<?, ?> build = project.getLastBuild(); build != null && mayAddEntries; build = build.getPreviousBuild()) {
-			
-			LivingDocBuildAction buildAction = findBuildAction(build);
+        AbstractBuild< ? , ? > build = findLatestLivingDocBuild();
 
-			if (buildAction != null) {
-				summaries.add(buildAction.getSummary());
-				if(maxCountBuilds > -1){
-					count ++;
-					mayAddEntries = count < maxCountBuilds;
-				}
-			}
-		}
+        if (build == null) {
+            response.sendRedirect2("nodata");
+        } else {
+            int buildId = build.getNumber();
+            response.sendRedirect2(String.format("../%s/livingdoc", buildId));
+        }
+    }
 
-		Collections.reverse(summaries);
+    public Graph getGraph () {
+        Calendar timestamp = project.getLastCompletedBuild().getTimestamp();
+        return new ProjectSummaryChart(timestamp, getAllLivingDocBuildSummaries());
+    }
 
-		return summaries;
-	}
-	
-	private int getChartMaxCountBuilds(){
-		
-		ParametersAction action = project.getLastBuild().getAction(ParametersAction.class);
-		if(action == null ){
-			return -1;
-		}
-		ParameterValue paramValue = action.getParameter(LD_CHART_MAX_COUNT_BUILDS);
-		if (paramValue == null){
-			return -1;
-		}else if(! (paramValue instanceof StringParameterValue)){
-			LOGGER.warning("Malformed build parameter " + LD_CHART_MAX_COUNT_BUILDS);
-			return -1;
-		}else{
-			String stringValue = ((StringParameterValue)paramValue).value;
-			return Integer.parseInt(stringValue);
-		}
-		
-	}
+    private List<SummaryBuildReportBean> getAllLivingDocBuildSummaries () {
 
-	private AbstractBuild<?, ?> findLatestLivingDocBuild() {
+        List<SummaryBuildReportBean> summaries = new ArrayList<SummaryBuildReportBean>();
+        int maxCountBuilds = getChartMaxCountBuilds();
+        int count = 0;
+        boolean mayAddEntries = maxCountBuilds == - 1 || count <= maxCountBuilds;
+        for (AbstractBuild< ? , ? > build = project.getLastBuild(); build != null && mayAddEntries; build =
+            build.getPreviousBuild()) {
 
-		for (AbstractBuild<?, ?> build = project.getLastBuild(); build != null; build = build.getPreviousBuild()) {
+            LivingDocBuildAction buildAction = findBuildAction(build);
 
-			if (findBuildAction(build) != null) {
-				return build;
-			}
-		}
+            if (buildAction != null) {
+                summaries.add(buildAction.getSummary());
+                if (maxCountBuilds > - 1) {
+                    count ++ ;
+                    mayAddEntries = count < maxCountBuilds;
+                }
+            }
+        }
 
-		return null;
-	}
+        Collections.reverse(summaries);
 
-	private LivingDocBuildAction findBuildAction(AbstractBuild<?, ?> build) {
-		return build.getAction(LivingDocBuildAction.class);
-	}
+        return summaries;
+    }
+
+    private int getChartMaxCountBuilds () {
+
+        ParametersAction action = project.getLastBuild().getAction(ParametersAction.class);
+        if (action == null) {
+            return - 1;
+        }
+        ParameterValue paramValue = action.getParameter(LD_CHART_MAX_COUNT_BUILDS);
+        if (paramValue == null) {
+            return - 1;
+        } else if ( ! ( paramValue instanceof StringParameterValue )) {
+            LOGGER.warning("Malformed build parameter " + LD_CHART_MAX_COUNT_BUILDS);
+            return - 1;
+        } else {
+            String stringValue = ( ( StringParameterValue ) paramValue ).value;
+            return Integer.parseInt(stringValue);
+        }
+
+    }
+
+    private AbstractBuild< ? , ? > findLatestLivingDocBuild () {
+
+        for (AbstractBuild< ? , ? > build = project.getLastBuild(); build != null; build = build.getPreviousBuild()) {
+
+            if (findBuildAction(build) != null) {
+                return build;
+            }
+        }
+
+        return null;
+    }
+
+    private LivingDocBuildAction findBuildAction (AbstractBuild< ? , ? > build) {
+        return build.getAction(LivingDocBuildAction.class);
+    }
 }

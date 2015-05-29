@@ -1,23 +1,22 @@
 /**
  * Copyright (c) 2009 Pyxis Technologies inc.
- *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA,
- * or see the FSF site: http://www.fsf.org.
+ * 
+ * This is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * This software is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site:
+ * http://www.fsf.org.
  */
 package jenkins.plugins.livingdoc.chart;
-
 
 import hudson.util.Graph;
 
@@ -39,110 +38,111 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
 import com.greenpepper.Statistics;
 
-public class ProjectSummaryChart
-		extends Graph {
 
-	private static final Color GREEN_COLOR = new Color(Integer.parseInt("33cc00", 16));
+public class ProjectSummaryChart extends Graph {
 
-	public static final String SUCCESS_SERIES_NAME = "Success";
-	public static final String FAILURES_SERIES_NAME = "Failures";
+    private static final Color GREEN_COLOR = new Color(Integer.parseInt("33cc00", 16));
 
-	private static final int SUCCESS_SERIES = 0;
-	private static final int FAILURES_SERIES = 1;
+    public static final String SUCCESS_SERIES_NAME = "Success";
+    public static final String FAILURES_SERIES_NAME = "Failures";
 
-	private static final int DEFAULT_CHART_WIDTH = 750;
-	private static final int DEFAULT_CHART_HEIGHT = 450;
+    private static final int SUCCESS_SERIES = 0;
+    private static final int FAILURES_SERIES = 1;
 
-	private List<SummaryBuildReportBean> summaries;
+    private static final int DEFAULT_CHART_WIDTH = 750;
+    private static final int DEFAULT_CHART_HEIGHT = 450;
 
-	private int lowerBoundCount = Integer.MAX_VALUE;
-	private int upperBoundCount = 0;
+    private List<SummaryBuildReportBean> summaries;
 
-	public ProjectSummaryChart(Calendar timestamp, List<SummaryBuildReportBean> summaries) {
-		super(timestamp, DEFAULT_CHART_WIDTH, DEFAULT_CHART_HEIGHT);
+    private int lowerBoundCount = Integer.MAX_VALUE;
+    private int upperBoundCount = 0;
 
-		this.summaries = summaries;
-	}
+    public ProjectSummaryChart (Calendar timestamp, List<SummaryBuildReportBean> summaries) {
+        super(timestamp, DEFAULT_CHART_WIDTH, DEFAULT_CHART_HEIGHT);
 
-	@Override
-	protected JFreeChart createGraph() {
-		return createChart(aggregateDataset());
-	}
-	
-	
-	private DefaultCategoryDataset aggregateDataset() {
+        this.summaries = summaries;
+    }
 
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    @Override
+    protected JFreeChart createGraph () {
+        return createChart(aggregateDataset());
+    }
 
-		for (SummaryBuildReportBean summary : summaries) {
-			Statistics stats = summary.getBuildSummary().getStatistics();
-			String label = String.format("#%d", summary.getBuildId());
-			int failureCount = stats.exceptionCount() + stats.wrongCount();
+    private DefaultCategoryDataset aggregateDataset () {
 
-			dataset.addValue(stats.rightCount(), SUCCESS_SERIES_NAME, label);
-			dataset.addValue(failureCount, FAILURES_SERIES_NAME, label);
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-			adjustUpperBound(stats);
-			adjustLowerBound(stats, failureCount);
-		}
+        for (SummaryBuildReportBean summary : summaries) {
+            Statistics stats = summary.getBuildSummary().getStatistics();
+            String label = String.format("#%d", summary.getBuildId());
+            int failureCount = stats.exceptionCount() + stats.wrongCount();
 
-		return dataset;
-	}
+            dataset.addValue(stats.rightCount(), SUCCESS_SERIES_NAME, label);
+            dataset.addValue(failureCount, FAILURES_SERIES_NAME, label);
 
-	private JFreeChart createChart(DefaultCategoryDataset dataset) {
+            adjustUpperBound(stats);
+            adjustLowerBound(stats, failureCount);
+        }
 
-		JFreeChart chart = ChartFactory.createLineChart("", "Build ID", "# Tests", dataset, PlotOrientation.VERTICAL,
-														true, true, false);
-		customizeChart(chart);
+        return dataset;
+    }
 
-		return chart;
-	}
+    private JFreeChart createChart (DefaultCategoryDataset dataset) {
 
-	private void customizeChart(JFreeChart chart) {
+        JFreeChart chart =
+            ChartFactory.createLineChart("", "Build ID", "# Tests", dataset, PlotOrientation.VERTICAL, true, true, false);
+        customizeChart(chart);
 
-		chart.setBackgroundPaint(Color.white);
+        return chart;
+    }
 
-		CategoryPlot plot = (CategoryPlot)chart.getPlot();
+    private void customizeChart (JFreeChart chart) {
 
-		adjustBound(plot.getRangeAxis());
+        chart.setBackgroundPaint(Color.white);
 
-		CategoryItemRenderer renderer = plot.getRenderer();
-		renderer.setSeriesPaint(SUCCESS_SERIES, GREEN_COLOR);
-		renderer.setSeriesPaint(FAILURES_SERIES, Color.red);
+        CategoryPlot plot = ( CategoryPlot ) chart.getPlot();
 
-		LineAndShapeRenderer lineAndShapeRenderer = (LineAndShapeRenderer)renderer;
-		lineAndShapeRenderer.setBaseItemLabelGenerator(new NumberLabelGenerator());
-		lineAndShapeRenderer.setBaseItemLabelsVisible(true);
-		lineAndShapeRenderer.setBaseShapesVisible(true);
-		lineAndShapeRenderer.setDrawOutlines(true);
-		lineAndShapeRenderer.setUseFillPaint(true);
+        adjustBound(plot.getRangeAxis());
 
-		renderer.setBaseStroke(new BasicStroke(2.0f));
-	}
+        CategoryItemRenderer renderer = plot.getRenderer();
+        renderer.setSeriesPaint(SUCCESS_SERIES, GREEN_COLOR);
+        renderer.setSeriesPaint(FAILURES_SERIES, Color.red);
 
-	private void adjustBound(ValueAxis valueAxis) {
-		// Since we are showing the ItemLabel on top, add a gap to the upper-bound value to make sure the
-		// ItemLabel is fully visible (did try with ItemLabelPosition without success!)
-		// @todo : need to find a better solution
-		int gap = (int)(20 * upperBoundCount / (double)DEFAULT_CHART_HEIGHT);
+        LineAndShapeRenderer lineAndShapeRenderer = ( LineAndShapeRenderer ) renderer;
+        lineAndShapeRenderer.setBaseItemLabelGenerator(new NumberLabelGenerator());
+        lineAndShapeRenderer.setBaseItemLabelsVisible(true);
+        lineAndShapeRenderer.setBaseShapesVisible(true);
+        lineAndShapeRenderer.setDrawOutlines(true);
+        lineAndShapeRenderer.setUseFillPaint(true);
 
-		valueAxis.setUpperBound(upperBoundCount + (gap < 7 ? 7 : gap));
-		valueAxis.setLowerBound(lowerBoundCount);
-	}
+        renderer.setBaseStroke(new BasicStroke(2.0f));
+    }
 
-	private void adjustUpperBound(Statistics stats) {
+    private void adjustBound (ValueAxis valueAxis) {
+        // Since we are showing the ItemLabel on top, add a gap to the
+        // upper-bound value to make sure the
+        // ItemLabel is fully visible (did try with ItemLabelPosition without
+        // success!)
+        // @todo : need to find a better solution
+        int gap = ( int ) ( 20 * upperBoundCount / ( double ) DEFAULT_CHART_HEIGHT );
 
-		if (upperBoundCount < stats.totalCount()) {
-			upperBoundCount = stats.totalCount();
-		}
-	}
+        valueAxis.setUpperBound(upperBoundCount + ( gap < 7 ? 7 : gap ));
+        valueAxis.setLowerBound(lowerBoundCount);
+    }
 
-	private void adjustLowerBound(Statistics stats, int failureCount) {
+    private void adjustUpperBound (Statistics stats) {
 
-		int value = Math.min(stats.rightCount(), failureCount);
+        if (upperBoundCount < stats.totalCount()) {
+            upperBoundCount = stats.totalCount();
+        }
+    }
 
-		if (lowerBoundCount > value) {
-			lowerBoundCount = value;
-		}
-	}
+    private void adjustLowerBound (Statistics stats, int failureCount) {
+
+        int value = Math.min(stats.rightCount(), failureCount);
+
+        if (lowerBoundCount > value) {
+            lowerBoundCount = value;
+        }
+    }
 }
