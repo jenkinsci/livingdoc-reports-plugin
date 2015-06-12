@@ -19,15 +19,14 @@
 package jenkins.plugins.livingdoc.results;
 
 import hudson.model.AbstractBuild;
+import info.novatec.testit.Statistics;
+import info.novatec.testit.TimeStatistics;
 
 import java.io.Serializable;
 import java.util.List;
 
 import jenkins.plugins.livingdoc.BuildReportBean;
 import jenkins.plugins.livingdoc.SummaryBuildReportBean;
-
-import com.greenpepper.Statistics;
-import com.greenpepper.TimeStatistics;
 
 
 public class BuildSummaryResult implements Serializable {

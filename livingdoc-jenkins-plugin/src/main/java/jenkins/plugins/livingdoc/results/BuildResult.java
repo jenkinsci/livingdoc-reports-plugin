@@ -20,14 +20,13 @@ package jenkins.plugins.livingdoc.results;
 
 import hudson.model.AbstractBuild;
 import hudson.util.IOUtils;
+import info.novatec.testit.util.ExceptionImposter;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 
 import jenkins.plugins.livingdoc.BuildReportBean;
-
-import com.greenpepper.util.ExceptionImposter;
 
 
 public class BuildResult implements Serializable {

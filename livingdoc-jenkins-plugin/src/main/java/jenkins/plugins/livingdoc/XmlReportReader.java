@@ -19,6 +19,8 @@
 package jenkins.plugins.livingdoc;
 
 import hudson.FilePath;
+import info.novatec.testit.Statistics;
+import info.novatec.testit.TimeStatistics;
 
 import java.io.File;
 import java.io.FileReader;
@@ -33,8 +35,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.ctc.wstx.stax.WstxInputFactory;
-import com.greenpepper.Statistics;
-import com.greenpepper.TimeStatistics;
 
 
 public class XmlReportReader {

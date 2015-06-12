@@ -19,12 +19,11 @@
 package jenkins.plugins.livingdoc.mapping;
 
 import static org.junit.Assert.assertNotNull;
+import info.novatec.testit.util.ExceptionImposter;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
-import com.greenpepper.util.ExceptionImposter;
 
 
 public class AbstractPage {

@@ -20,11 +20,10 @@
 		<url>http://aqe.novatec-gmbh.de/</url>
 	</organization>
 
-
 	<dependencies>
 		<dependency>
-			<groupId>com.greenpepper</groupId>
-			<artifactId>greenpepper-core</artifactId>
+			<groupId>info.novatec.testit</groupId>
+			<artifactId>livingdoc-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>

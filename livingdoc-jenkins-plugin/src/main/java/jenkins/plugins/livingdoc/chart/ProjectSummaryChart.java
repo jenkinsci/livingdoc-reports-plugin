@@ -19,6 +19,7 @@
 package jenkins.plugins.livingdoc.chart;
 
 import hudson.util.Graph;
+import info.novatec.testit.Statistics;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -35,8 +36,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
-
-import com.greenpepper.Statistics;
 
 
 public class ProjectSummaryChart extends Graph {

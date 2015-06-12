@@ -18,13 +18,13 @@
  */
 package jenkins.plugins.livingdoc;
 
+import info.novatec.testit.Statistics;
+import info.novatec.testit.TimeStatistics;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.greenpepper.Statistics;
-import com.greenpepper.TimeStatistics;
 
 
 public class SummaryBuildReportBean implements Serializable {

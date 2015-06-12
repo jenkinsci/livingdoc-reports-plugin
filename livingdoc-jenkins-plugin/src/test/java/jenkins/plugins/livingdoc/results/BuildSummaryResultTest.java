@@ -19,10 +19,9 @@
 package jenkins.plugins.livingdoc.results;
 
 import static org.junit.Assert.assertEquals;
+import info.novatec.testit.Statistics;
 
 import org.junit.Test;
-
-import com.greenpepper.Statistics;
 
 
 public class BuildSummaryResultTest {

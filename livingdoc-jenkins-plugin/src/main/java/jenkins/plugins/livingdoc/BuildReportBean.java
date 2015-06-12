@@ -18,14 +18,14 @@
  */
 package jenkins.plugins.livingdoc;
 
+import info.novatec.testit.Statistics;
+import info.novatec.testit.TimeStatistics;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.commons.lang.StringUtils;
-
-import com.greenpepper.Statistics;
-import com.greenpepper.TimeStatistics;
 
 
 public class BuildReportBean implements Serializable {

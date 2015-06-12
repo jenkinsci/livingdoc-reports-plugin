@@ -21,14 +21,13 @@ package jenkins.plugins.livingdoc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import hudson.FilePath;
+import info.novatec.testit.Statistics;
+import info.novatec.testit.TimeStatistics;
 
 import java.io.File;
 import java.net.URL;
 
 import org.junit.Test;
-
-import com.greenpepper.Statistics;
-import com.greenpepper.TimeStatistics;
 
 
 public class XmlReportReaderTest {

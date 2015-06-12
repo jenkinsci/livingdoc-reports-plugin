@@ -1,5 +1,9 @@
 package jenkins.plugins.livingdoc;
 
+import info.novatec.testit.repository.DocumentNotFoundException;
+import info.novatec.testit.util.CollectionUtil;
+import info.novatec.testit.util.URIUtil;
+
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -10,10 +14,6 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcRequest;
-
-import com.greenpepper.repository.DocumentNotFoundException;
-import com.greenpepper.util.CollectionUtil;
-import com.greenpepper.util.URIUtil;
 
 
 public class PostExecutionResultPublisher {

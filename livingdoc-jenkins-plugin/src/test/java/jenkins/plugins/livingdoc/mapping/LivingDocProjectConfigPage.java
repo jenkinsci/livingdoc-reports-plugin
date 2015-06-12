@@ -19,14 +19,13 @@
 package jenkins.plugins.livingdoc.mapping;
 
 import static org.junit.Assert.assertNotNull;
+import info.novatec.testit.util.CollectionUtil;
+import info.novatec.testit.util.ExceptionImposter;
 
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-
-import com.greenpepper.util.CollectionUtil;
-import com.greenpepper.util.ExceptionImposter;
 
 
 public class LivingDocProjectConfigPage extends AbstractPage {

@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.containsString;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
+import info.novatec.testit.Statistics;
 
 import java.awt.Color;
 
@@ -35,8 +36,6 @@ import jenkins.plugins.livingdoc.util.BankSamplesSCM;
 import jenkins.plugins.livingdoc.util.JenkinsUITestCase;
 
 import org.junit.Ignore;
-
-import com.greenpepper.Statistics;
 
 
 @Ignore
