@@ -22,8 +22,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import info.novatec.testit.Statistics;
-import info.novatec.testit.TimeStatistics;
+import info.novatec.testit.livingdoc.Statistics;
+import info.novatec.testit.livingdoc.TimeStatistics;
 
 import org.junit.Test;
 

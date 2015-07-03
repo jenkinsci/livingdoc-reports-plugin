@@ -1,8 +1,8 @@
 package jenkins.plugins.livingdoc;
 
-import info.novatec.testit.repository.DocumentNotFoundException;
-import info.novatec.testit.util.CollectionUtil;
-import info.novatec.testit.util.URIUtil;
+import info.novatec.testit.livingdoc.repository.DocumentNotFoundException;
+import info.novatec.testit.livingdoc.util.CollectionUtil;
+import info.novatec.testit.livingdoc.util.URIUtil;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;

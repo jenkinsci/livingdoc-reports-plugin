@@ -18,8 +18,8 @@
  */
 package jenkins.plugins.livingdoc;
 
-import info.novatec.testit.Statistics;
-import info.novatec.testit.TimeStatistics;
+import info.novatec.testit.livingdoc.Statistics;
+import info.novatec.testit.livingdoc.TimeStatistics;
 
 import java.io.File;
 import java.io.Serializable;

@@ -20,7 +20,7 @@ package jenkins.plugins.livingdoc.results;
 
 import hudson.model.AbstractBuild;
 import hudson.util.IOUtils;
-import info.novatec.testit.util.ExceptionImposter;
+import info.novatec.testit.livingdoc.util.ExceptionImposter;
 
 import java.io.FileReader;
 import java.io.IOException;

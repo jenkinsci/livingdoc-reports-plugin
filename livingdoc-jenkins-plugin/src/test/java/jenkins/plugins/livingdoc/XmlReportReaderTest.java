@@ -21,8 +21,8 @@ package jenkins.plugins.livingdoc;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import hudson.FilePath;
-import info.novatec.testit.Statistics;
-import info.novatec.testit.TimeStatistics;
+import info.novatec.testit.livingdoc.Statistics;
+import info.novatec.testit.livingdoc.TimeStatistics;
 
 import java.io.File;
 import java.net.URL;

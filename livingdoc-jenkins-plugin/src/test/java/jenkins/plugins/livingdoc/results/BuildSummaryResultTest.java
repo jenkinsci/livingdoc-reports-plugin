@@ -19,7 +19,7 @@
 package jenkins.plugins.livingdoc.results;
 
 import static org.junit.Assert.assertEquals;
-import info.novatec.testit.Statistics;
+import info.novatec.testit.livingdoc.Statistics;
 
 import org.junit.Test;
 

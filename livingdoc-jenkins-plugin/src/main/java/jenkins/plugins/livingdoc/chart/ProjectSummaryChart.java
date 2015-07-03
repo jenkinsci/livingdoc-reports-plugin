@@ -19,7 +19,7 @@
 package jenkins.plugins.livingdoc.chart;
 
 import hudson.util.Graph;
-import info.novatec.testit.Statistics;
+import info.novatec.testit.livingdoc.Statistics;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

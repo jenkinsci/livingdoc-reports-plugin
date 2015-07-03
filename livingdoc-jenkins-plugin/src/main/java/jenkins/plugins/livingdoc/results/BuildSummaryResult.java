@@ -19,8 +19,8 @@
 package jenkins.plugins.livingdoc.results;
 
 import hudson.model.AbstractBuild;
-import info.novatec.testit.Statistics;
-import info.novatec.testit.TimeStatistics;
+import info.novatec.testit.livingdoc.Statistics;
+import info.novatec.testit.livingdoc.TimeStatistics;
 
 import java.io.Serializable;
 import java.util.List;

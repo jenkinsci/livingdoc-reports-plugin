@@ -19,8 +19,8 @@
 package jenkins.plugins.livingdoc.mapping;
 
 import static org.junit.Assert.assertNotNull;
-import info.novatec.testit.util.CollectionUtil;
-import info.novatec.testit.util.ExceptionImposter;
+import info.novatec.testit.livingdoc.util.CollectionUtil;
+import info.novatec.testit.livingdoc.util.ExceptionImposter;
 
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.By;

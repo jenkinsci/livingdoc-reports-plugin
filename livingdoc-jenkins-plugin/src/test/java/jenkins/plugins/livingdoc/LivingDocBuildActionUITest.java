@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.containsString;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
-import info.novatec.testit.Statistics;
+import info.novatec.testit.livingdoc.Statistics;
 
 import java.awt.Color;
 

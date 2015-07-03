@@ -19,7 +19,7 @@
 package jenkins.plugins.livingdoc.mapping;
 
 import static org.junit.Assert.assertNotNull;
-import info.novatec.testit.util.ExceptionImposter;
+import info.novatec.testit.livingdoc.util.ExceptionImposter;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
