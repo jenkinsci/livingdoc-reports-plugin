@@ -24,6 +24,7 @@
 
 	<properties>
 		<project.title>testIT LivingDoc | Jenkins</project.title>
+		<livingdoc.version>1.0.0-SNAPSHOT</livingdoc.version>
 	</properties>
 
 	<modules>
@@ -35,7 +36,7 @@
 			<dependency>
 				<groupId>info.novatec.testit</groupId>
 				<artifactId>livingdoc-core</artifactId>
-				<version>${project.version}</version>
+				<version>${livingdoc.version}</version>
 			</dependency>
 
 			<dependency>
