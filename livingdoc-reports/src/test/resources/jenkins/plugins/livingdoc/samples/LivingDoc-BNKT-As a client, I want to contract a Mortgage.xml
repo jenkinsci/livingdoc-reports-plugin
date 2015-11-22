@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><documents><document><name><![CDATA[As a client, I want to contract a Mortgage]]></name><external-link><![CDATA[http://www.greenpeppersoftware.com/confluence/display/BNKT/As+a+client%2C+I+want+to+contract+a+Mortgage]]></external-link><time-statistics><execution>586</execution><total>910</total></time-statistics><statistics><success>6</success><failure>1</failure><error>2</error><ignored>0</ignored></statistics><results><![CDATA[<html>
+<head>
+<title>As a client, I want to contract a Mortgage</title>
+<meta name="title" content="As a client, I want to contract a Mortgage"/>
+<meta name="external-link" content="http://www.greenpeppersoftware.com/confluence/display/BNKT/As+a+client%2C+I+want+to+contract+a+Mortgage"/>
+</head>
+<body>
+<table style="display:none">
+	<tr>
+		<td>Begin Info</td>
+	</tr>
+</table>
+<div style="padding:0px; margin:0px; ">
+		
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> <b>Story #1:</b> </th>
+<th class='confluenceTh'>  As a client, I want to contract a Mortgage </th>
+</tr>
+<tr>
+<td class='confluenceTd'><b>Actor:</b> </td>
+<td class='confluenceTd'> Client </td>
+</tr>
+<tr>
+<td class='confluenceTd'><b>Condition of success:</b> </td>
+<td class='confluenceTd'> Mortgage is open with an account number and the balance of mortgage respect the business rules.</td>
+</tr>
+</tbody></table>
+</div>
+<table style="display:none">
+	<tr>
+		<td>End Info</td>
+	</tr>
+</table>
+
+<table style="display:none">
+	<tr>
+		<td>Import</td>
+	</tr>
+			<tr>
+			<td>com.greenpepper.samples.fixture.Mortgage</td>
+		</tr>
+	</table>
+<h3 id="Asaclient%2CIwanttocontractaMortgage-LimitingtheMortgage">Limiting the Mortgage</h3>
+<p>The mortgage cannot be greater than 75% of the commercial evaluation.<br/>
+Ex:</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'>rule for</td>
+<td class='confluenceTd'> maximum mortgage allowance </td>
+</tr>
+<tr>
+<td class='confluenceTd'>Commercial evaluation </td>
+<td class='confluenceTd'> purchased price </td>
+<td class='confluenceTd'> mortgage allowance? </td>
+</tr>
+<tr>
+<td class='confluenceTd'> 100000 </td>
+<td class='confluenceTd'> 200000 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 75000</td>
+</tr>
+<tr>
+<td class='confluenceTd'> 200000 </td>
+<td class='confluenceTd'> 125000 </td>
+<td class='confluenceTd' style="background-color: #FFAAAA;"><b>Expected:</b> 120000 <b>Received:</b> 125000.0</td>
+</tr>
+</tbody></table>
+<p><br clear="all" /></p>
+<h3 id="Asaclient%2CIwanttocontractaMortgage-Cashdownrule">Cash down rule</h3>
+<p>The mortgage is increase by 2.5% if the cash down amount is less than 25% of the mortgage allowance.<br/>
+Ex:</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'>rule for</td>
+<td class='confluenceTd'> Cash down impact on Mortgage balance</td>
+</tr>
+<tr>
+<td class='confluenceTd'> mortgage allowance </td>
+<td class='confluenceTd'> Cash down </td>
+<td class='confluenceTd'> mortgage balance? </td>
+</tr>
+<tr>
+<td class='confluenceTd'> 100000 </td>
+<td class='confluenceTd'> 10000 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 92250 </td>
+</tr>
+<tr>
+<td class='confluenceTd'> 100000 </td>
+<td class='confluenceTd'> 25000</td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 75000</td>
+</tr>
+<tr>
+<td class='confluenceTd'> 100000 </td>
+<td class='confluenceTd'> 30000 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 70000 </td>
+</tr>
+</tbody></table>
+<p><br clear="all" /></p>
+
+<h3 id="Asaclient%2CIwanttocontractaMortgage-Option%22LaBanquefaitlesfrais%2FThebankpaythebills%22">Option "La Banque fait les frais / The bank pay the bills"</h3>
+<p>The client has the opportunity to let the bank pay for the Notary fees and the Bienvenue tax. <br/>
+These fees will be added to the mortgage balance. The Notary fees are limited to a maximum of 1200$.<br/>
+<img class="emoticon" src="/confluence/images/icons/emoticons/warning.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> These fees are not considered in the mortgage limit calculation<br/>
+Ex:</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'>rule for</td>
+<td class='confluenceTd'> the bank pay the bills impact on Mortgage balance</td>
+</tr>
+<tr>
+<td class='confluenceTd'>initial mortgage balance</td>
+<td class='confluenceTd'> Notary fees </td>
+<td class='confluenceTd'> Bienvenue tax</td>
+<td class='confluenceTd'> Mortgage balance?</td>
+</tr>
+<tr>
+<td class='confluenceTd'> 100000 </td>
+<td class='confluenceTd'> 500 </td>
+<td class='confluenceTd'> 1200 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 101700</td>
+</tr>
+<tr>
+<td class='confluenceTd'> 100000 </td>
+<td class='confluenceTd'> 2000 </td>
+<td class='confluenceTd'> 1200 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 102400</td>
+</tr>
+</tbody></table>
+<p><br clear="all" /></p>
+<h3 id="Asaclient%2CIwanttocontractaMortgage-Thecontractedmortgageisidentifiedbyanumberandmustbelinkedtoanexistingaccount">The contracted mortgage is identified by a number and must be linked to an existing account</h3>
+<p><img class="emoticon" src="/confluence/images/icons/emoticons/warning.gif" height="16" width="16" align="absmiddle" alt="" border="0"/> To contract a mortgage, the client must have an opened Banking account (savings or checking)<br/>
+Ex:</p>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd' style="background-color: #FFFFAA;">do with<hr/><pre><font size="-2">com.greenpepper.reflect.TypeNotFoundException: Contract a Mortgage does not match any known type<br/>com.greenpepper.systemunderdevelopment.DefaultSystemUnderDevelopment.loadType(DefaultSystemUnderDevelopment.java:67)<br/>com.greenpepper.extensions.guice.GuiceSystemUnderDevelopment.getFixture(GuiceSystemUnderDevelopment.java:52)<br/>com.greenpepper.document.GreenPepperInterpreterSelector.selectFixture(GreenPepperInterpreterSelector.java:60)<br/>com.greenpepper.document.GreenPepperInterpreterSelector.selectInterpreter(GreenPepperInterpreterSelector.java:39)<br/>com.greenpepper.document.Document.execute(Document.java:91)<br/>com.greenpepper.runner.DocumentRunner.run(DocumentRunner.java:106)<br/>com.greenpepper.runner.SuiteRunner.run(SuiteRunner.java:81)<br/>com.greenpepper.runner.CommandLineRunner.runSpec(CommandLineRunner.java:88)<br/>com.greenpepper.runner.CommandLineRunner.run(CommandLineRunner.java:78)<br/>sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br/>sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)</font></pre></td>
+<td class='confluenceTd'> Contract a Mortgage </td>
+</tr>
+<tr>
+<td class='confluenceTd'>reject</td>
+<td class='confluenceTd'> contract a mortgage for </td>
+<td class='confluenceTd'> a none existing bank client </td>
+<td class='confluenceTd'> with number </td>
+<td class='confluenceTd'> 12345 </td>
+</tr>
+<tr>
+<td class='confluenceTd'>accept</td>
+<td class='confluenceTd'> contract a mortgage for </td>
+<td class='confluenceTd'> an existing bank client </td>
+<td class='confluenceTd'> with number </td>
+<td class='confluenceTd'> 54321 </td>
+</tr>
+</tbody></table>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd' style="background-color: #FFFFAA;">list of<hr/><pre><font size="-2">com.greenpepper.reflect.TypeNotFoundException: contracted mortgages does not match any known type<br/>com.greenpepper.systemunderdevelopment.DefaultSystemUnderDevelopment.loadType(DefaultSystemUnderDevelopment.java:67)<br/>com.greenpepper.extensions.guice.GuiceSystemUnderDevelopment.getFixture(GuiceSystemUnderDevelopment.java:52)<br/>com.greenpepper.document.GreenPepperInterpreterSelector.selectFixture(GreenPepperInterpreterSelector.java:60)<br/>com.greenpepper.document.GreenPepperInterpreterSelector.selectInterpreter(GreenPepperInterpreterSelector.java:39)<br/>com.greenpepper.document.Document.execute(Document.java:91)<br/>com.greenpepper.runner.DocumentRunner.run(DocumentRunner.java:106)<br/>com.greenpepper.runner.SuiteRunner.run(SuiteRunner.java:81)<br/>com.greenpepper.runner.CommandLineRunner.runSpec(CommandLineRunner.java:88)<br/>com.greenpepper.runner.CommandLineRunner.run(CommandLineRunner.java:78)<br/>sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br/>sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)</font></pre></td>
+<td class='confluenceTd'> contracted mortgages </td>
+</tr>
+<tr>
+<td class='confluenceTd'> mortgage number </td>
+</tr>
+<tr>
+<td class='confluenceTd'> 54321 </td>
+</tr>
+</tbody></table>
+<p><br clear="all" /></p>
+
+
+
+</body>
+</html>]]></results></document></documents>

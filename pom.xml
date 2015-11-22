@@ -28,7 +28,8 @@
 	</properties>
 
 	<modules>
-		<module>livingdoc-jenkins-plugin</module>
+		<!-- module>livingdoc-jenkins-plugin</module -->
+		<module>livingdoc-reports</module>
 	</modules>
 
 	<dependencyManagement>
