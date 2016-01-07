@@ -27,12 +27,18 @@ import org.kohsuke.stapler.StaplerRequest;
 
 public class LivingDocReportsPublisher extends Recorder {
 
+    static{ 
+        
+        System.out.println("Loading LivingDocReporsPiublisher class ...");
+    }
+    
     // Needed to succeed field check
     public String testResultsPattern = null;
     public int failureThreshold;
 
     public ConfluenceConfig confluenceConfig;
     public boolean publishToConfluence = false;
+    
     @Extension
     public static final LivingDocDescriptor DESCRIPTOR = new LivingDocDescriptor();
 
@@ -42,8 +48,9 @@ public class LivingDocReportsPublisher extends Recorder {
 
         public LivingDocDescriptor () {
             super(LivingDocReportsPublisher.class);
+            System.out.println("Loading LivingDoc-Descriptor...");
             load();
-        }
+        } 
 
         @Override
         public String getDisplayName () {
@@ -52,6 +59,7 @@ public class LivingDocReportsPublisher extends Recorder {
 
         @Override
         public boolean isApplicable (Class< ? extends AbstractProject> jobType) {
+            System.out.println(String.format("Checking support for job type %s", jobType.getName()));
             return true;
         }
 
@@ -72,7 +80,18 @@ public class LivingDocReportsPublisher extends Recorder {
 
             return validationResult;
         }
+        
+        public FormValidation doCheckSut (@QueryParameter final String sut) {
+            FormValidation validationResult;
 
+            if (StringUtils.isNotEmpty(sut)) {
+                validationResult = FormValidation.ok();
+            } else {
+                validationResult = FormValidation.error("Please provide a valid SUT (System Under Test)");
+            }
+            return validationResult;
+        }
+        
         public int getDefaultFailureThreshold () {
             return DEFAULT_FAILURE_THRESHOLD;
         }
@@ -95,7 +114,8 @@ public class LivingDocReportsPublisher extends Recorder {
         BuildLogger.intialize(listener);
         FilePath workspaceDir = build.getWorkspace();
         FilePath buildDir = new FilePath(build.getRootDir());
-
+        System.out.println(String.format("Performing post build step %s", build.getDisplayName()));
+        
         SummaryBuildReportBean summary =
             workspaceDir
                 .act(new ReportCollector(buildDir, build.getNumber(), build.getBuildVariables(), testResultsPattern));

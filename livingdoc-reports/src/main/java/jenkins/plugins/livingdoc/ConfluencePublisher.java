@@ -1,18 +1,25 @@
 package jenkins.plugins.livingdoc;
 
 import info.novatec.testit.livingdoc.repository.DocumentNotFoundException;
+import info.novatec.testit.livingdoc.server.rpc.xmlrpc.XmlRpcDataMarshaller;
+import info.novatec.testit.livingdoc.server.transfer.ExecutionResult;
+import info.novatec.testit.livingdoc.server.transfer.SpecificationLocation;
 import info.novatec.testit.livingdoc.util.CollectionUtil;
 import info.novatec.testit.livingdoc.util.URIUtil;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.apache.xmlrpc.XmlRpcClient;
@@ -27,19 +34,13 @@ public class ConfluencePublisher {
 
     private ConfluenceConfig confluenceConfig;
 
-    private Vector<String> definitionRef;
-    private String normalizedXmlReport;
-    private String username = "";
-    private String password = "";
-    private URI xmlRpcUri;
-
-    public ConfluencePublisher (ConfluenceConfig confluenceConfig) {
+    public ConfluencePublisher(ConfluenceConfig confluenceConfig) {
         super();
         this.confluenceConfig = confluenceConfig;
 
     }
 
-    public void publishToConfluence (SummaryBuildReportBean summaryBuildReport) {
+    public void publishToConfluence(SummaryBuildReportBean summaryBuildReport) {
 
         if (StringUtils.isNotEmpty(confluenceConfig.getSystemProperties())) {
             setSystemProperties();
@@ -49,19 +50,18 @@ public class ConfluencePublisher {
         }
     }
 
-    private void publishReportToConfluence (BuildReportBean report) {
+    private void publishReportToConfluence(BuildReportBean report) {
         LOGGER.entering(getClass().getCanonicalName(), "publishToConfluence");
         try {
             LOGGER.fine("Publishing to Confluence : Url=" + confluenceConfig.getConfluenceUrl());
             LOGGER.finer("Current system properties:\n" + System.getProperties());
 
+            String normalizedXmlReport = normalizeContent(report.getXmlReport());
             String location = getLocation(report.getName());
-            normalizedXmlReport = normalizeContent(report.getResultFile());
+            
+            SpecificationLocation specificationLocation = downloadSpecificationDefinition(location);
 
-            this.xmlRpcUri = generateXmlRpcUrl();
-            this.definitionRef = downloadSpecificationDefinition(location);
-
-            saveExecutionResult();
+            saveExecutionResult(specificationLocation, normalizedXmlReport);
             LOGGER.fine("Publishing to Confluence succeeded");
             BuildLogger.info("Results successfully published to confluence:\n\t\tFile:" + report.getName());
         } catch (Exception e) {
@@ -73,7 +73,7 @@ public class ConfluencePublisher {
         LOGGER.exiting(getClass().getCanonicalName(), "publishToConfluence");
     }
 
-    String getLocation (String filename) {
+    String getLocation(String filename) {
         LOGGER.entering(getClass().getCanonicalName(), "getLocation", filename);
         StringBuilder location = new StringBuilder(filename);
         if (StringUtils.isNotEmpty(confluenceConfig.getFilenamePrefix())
@@ -101,12 +101,12 @@ public class ConfluencePublisher {
         return location.toString();
     }
 
-    private String normalizeContent (String original) {
+    private String normalizeContent(String original) {
         return StringUtils.toEncodedString(original.getBytes(), Charset.forName("UTF-8"));
 
     }
 
-    private void setSystemProperties () {
+    private void setSystemProperties() {
         Properties sysProps = System.getProperties();
         StringInputStream sis = new StringInputStream(confluenceConfig.getSystemProperties());
 
@@ -125,77 +125,69 @@ public class ConfluencePublisher {
 
     }
 
-    @SuppressWarnings ( "rawtypes" )
-    private void saveExecutionResult () throws Exception {
-        URI location = URI.create(URIUtil.raw(definitionRef.get(1)));
-        Vector args =
-            CollectionUtil.toVector(getUserName(), getPassword(), CollectionUtil.toVector(location.getFragment(),
-                definitionRef.get(4), confluenceConfig.getSut(), normalizedXmlReport));
+    private void saveExecutionResult(SpecificationLocation specificationLocation, String normalizedXmlReport) throws Exception {
+        URI location = URI.create(URIUtil.raw(specificationLocation.getBaseTestUrl()));
 
-        String msg = ( String ) getXmlRpcClient().execute(new XmlRpcRequest(LD_HANDLER + ".saveExecutionResult", args));
+        ExecutionResult execResult = new ExecutionResult();
+        execResult.setSpaceKey(location.getFragment());
+        execResult.setPageTitle(specificationLocation.getSpecificationName());
+        execResult.setSut(confluenceConfig.getSut());
+        execResult.setXmlReport(normalizedXmlReport);
+        
+        Vector<Serializable> args = CollectionUtil.toVector(specificationLocation.getUsername(), specificationLocation.getPassword(), execResult.marshallize());
+        LOGGER.finest(String.format("Publishing execution rsult to confluence :\n %s", execResult));
+        String msg =
+            ( String ) getXmlRpcClient().execute(new XmlRpcRequest(LD_HANDLER + ".saveExecutionResult", args));
 
-        if ( ! ( "<success>".equals(msg) )) {
+        if ( ! ( ExecutionResult.SUCCESS.equals(msg) )) {
             throw new Exception(msg);
         }
 
     }
 
-    private String getUserName () {
-        return StringUtils.isEmpty(username) ? definitionRef.get(2) : username;
-    }
-
-    private String getPassword () {
-        return StringUtils.isEmpty(password) ? definitionRef.get(3) : password;
-    }
-
-    private Vector<String> downloadSpecificationDefinition (String location) throws Exception {
+    private SpecificationLocation downloadSpecificationDefinition(String location) throws Exception {
         String path = URI.create(URIUtil.raw(location)).getPath();
         String[] parts = path.split("/", 2);
         String repoUID = parts[0];
         if (parts.length == 1)
             throw new DocumentNotFoundException(location);
 
-        Vector<Vector<String>> definitions = downloadSpecificationsDefinitions(repoUID);
-        return findDefinitionFor(definitions, parts[1]);
+        List<SpecificationLocation> specLocationList = downloadSpecificationLocations(repoUID);
+        return findSpecificationLocationFor(specLocationList, parts[1]);
     }
 
-    @SuppressWarnings ( "unchecked" )
-    private Vector<Vector<String>> downloadSpecificationsDefinitions (String repoUID) throws Exception {
-        Vector<Vector<String>> definitions =
+    @SuppressWarnings("unchecked")
+    private List<SpecificationLocation> downloadSpecificationLocations(String repoUID) throws Exception {
+        Vector<Vector<String>> rawSpecLocationList =
             ( Vector<Vector<String>> ) getXmlRpcClient().execute(
                 new XmlRpcRequest(LD_HANDLER + ".getListOfSpecificationLocations", CollectionUtil.toVector(repoUID,
                     confluenceConfig.getSut())));
-        checkForErrors(definitions);
-        return definitions;
+        checkForErrors(rawSpecLocationList);
+
+        List<SpecificationLocation> specLocationList = new ArrayList<SpecificationLocation>(rawSpecLocationList.size());
+
+        for (Vector<String> rawSpecLoc : rawSpecLocationList) {
+            specLocationList.add(XmlRpcDataMarshaller.toSpecificationLocation(rawSpecLoc));
+        }
+        return specLocationList;
     }
 
-    private XmlRpcClient getXmlRpcClient () throws MalformedURLException {
+    private XmlRpcClient getXmlRpcClient() throws MalformedURLException {
+        URI xmlRpcUri = generateXmlRpcUrl();
         return new XmlRpcClient(xmlRpcUri.getScheme() + "://" + xmlRpcUri.getAuthority() + xmlRpcUri.getPath());
     }
 
-    private void checkErrors (Object object) throws Exception {
-        if (object instanceof Exception) {
-            throw ( Exception ) object;
-        }
-
-        if (object instanceof String) {
-            String msg = ( String ) object;
-            if ( ! StringUtils.isEmpty(msg) && msg.indexOf("<exception>") > - 1)
-                throw new Exception(msg.replace("<exception>", ""));
-        }
-    }
-
-    private Vector<String> findDefinitionFor (Vector<Vector<String>> definitions, String location)
+    private SpecificationLocation findSpecificationLocationFor(List<SpecificationLocation> specLocationList, String location)
         throws DocumentNotFoundException {
-        for (Vector<String> def : definitions) {
-            if (def.get(4).equals(location))
-                return def;
+        for (SpecificationLocation loc : specLocationList) {
+            if (loc.getSpecificationName().equals(location))
+                return loc;
         }
         throw new DocumentNotFoundException(location);
     }
 
-    @SuppressWarnings ( { "unchecked", "rawtypes" } )
-    private void checkForErrors (Object xmlRpcResponse) throws Exception {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void checkForErrors(Object xmlRpcResponse) throws Exception {
         if (xmlRpcResponse instanceof Vector) {
             Vector temp = ( Vector ) xmlRpcResponse;
             if ( ! temp.isEmpty()) {
@@ -211,14 +203,28 @@ public class ConfluencePublisher {
         }
     }
 
-    private URI generateXmlRpcUrl () {
-        // rpc/xmlrpc?handler=greenpepper1&amp;sut=XP-CiDEV&amp;includeStyle=true&amp;implemented=true#lderepko
-        StringBuilder baseUrl = new StringBuilder(confluenceConfig.getConfluenceUrl());
-        if ( ! confluenceConfig.getConfluenceUrl().endsWith("/")) {
-            baseUrl.append("/");
+    private void checkErrors(Object object) throws Exception {
+        if (object instanceof Exception) {
+            throw ( Exception ) object;
         }
-        baseUrl.append("rpc/xmlrpc?handler=" + LD_HANDLER).append("&amp;sut=" + confluenceConfig.getSut()).append(
-            "&amp;includeStyle=true&amp;implemented=true#").append(confluenceConfig.getConfluenceSpaceKey());
-        return URI.create(URIUtil.raw(baseUrl.toString()));
+
+        if (object instanceof String) {
+            String msg = ( String ) object;
+            if ( ! StringUtils.isEmpty(msg) && msg.indexOf("<exception>") > - 1)
+                throw new Exception(msg.replace("<exception>", ""));
+        }
+    }
+
+    private URI generateXmlRpcUrl() {
+        // rpc/xmlrpc?handler=greenpepper1&amp;sut=XP-CiDEV&amp;includeStyle=true&amp;implemented=true#lderepko
+        String baseUrl =
+            confluenceConfig.getConfluenceUrl().endsWith("/") ? confluenceConfig.getConfluenceUrl() : confluenceConfig
+                .getConfluenceUrl()
+                + "/";
+
+        String xmlRPCUrl =
+            String.format("%srpc/xmlrpc?handler=%s&amp;sut=%s&amp;includeStyle=true&amp;implemented=true#%s", baseUrl,
+                LD_HANDLER, confluenceConfig.getSut(), confluenceConfig.getConfluenceSpaceKey());
+        return URI.create(URIUtil.raw(xmlRPCUrl));
     }
 }

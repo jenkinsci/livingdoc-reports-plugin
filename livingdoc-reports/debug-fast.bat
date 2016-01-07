@@ -7,5 +7,5 @@ SET MAVEN_OPTS=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspe
 
 rmdir /S /Q work\plugins
 
-mvn clean hpi:run
+mvn clean hpi:run -DhttpPort=4040 -Dprefix=/jenkins
 

@@ -17,6 +17,9 @@
 		<f:entry title="File name prefix" field="filenamePrefix">
 					<f:textbox value="${confluenceConfig.filenamePrefix}" />
 		</f:entry>
+		<f:entry title="SUT" field="sut">
+					<f:textbox value="${confluenceConfig.sut}" />
+		</f:entry>
 		<f:entry title="Confluence Site Title" field="confluenceSiteTitle">
 					<f:textbox value="${confluenceConfig.confluenceSiteTitle}" />
 		</f:entry>

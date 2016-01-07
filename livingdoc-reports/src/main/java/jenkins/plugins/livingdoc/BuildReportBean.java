@@ -46,7 +46,7 @@ public class BuildReportBean implements Serializable {
     private TimeStatistics timeStatistics;
     private String result;
     private String resultFile;
-
+    private String xmlReport;
     public BuildReportBean (int id, int buildId) {
         this.id = id;
         this.buildId = buildId;
@@ -114,5 +114,13 @@ public class BuildReportBean implements Serializable {
 
     public boolean isResultFileExist () {
         return StringUtils.isNotEmpty(resultFile) && new File(resultFile).exists();
+    }
+
+    public String getXmlReport() {
+        return xmlReport;
+    }
+
+    public void setXmlReport(String xmlReport) {
+        this.xmlReport = xmlReport;
     }
 }

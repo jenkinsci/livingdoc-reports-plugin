@@ -11,17 +11,15 @@
 	<artifactId>livingdoc-reports</artifactId>
 	<packaging>hpi</packaging>
 	<name>${project.title} | Reports Plugin</name>
-	<url>http://aqe.novatec-gmbh.de/</url>
-
-	<organization>
-		<name>NovaTec Consulting  GmbH</name>
-		<url>http://aqe.novatec-gmbh.de/</url>
-	</organization>
-  
+	
 	<dependencies>
 		<dependency>
 			<groupId>info.novatec.testit</groupId>
 			<artifactId>livingdoc-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>info.novatec.testit</groupId>
+			<artifactId>livingdoc-client</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -36,6 +34,11 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -53,18 +56,8 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
-
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.jenkins-ci.tools</groupId>
-				<artifactId>maven-hpi-plugin</artifactId>
-				<configuration>
-					<disabledTestInjection>true</disabledTestInjection>
-					<jenkinsHome>${project.build.directory}/jenkins-tmp</jenkinsHome>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

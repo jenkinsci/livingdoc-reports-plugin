@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.jenkinsci.remoting.RoleChecker;
 
 
@@ -53,6 +54,7 @@ public class ReportCollector implements FilePath.FileCallable<SummaryBuildReport
         LOGGER.entering(getClass().getCanonicalName(), "invoke");
         try {
             for (FilePath fileReport : list(workspaceDir)) {
+                String xmlReportContent = FileUtils.readFileToString(new File(fileReport.toURI()));
                 XmlReportReader xmlReport = new XmlReportReader().parse(fileReport);
 
                 BuildReportBean buildReportBean = new BuildReportBean(nextId(), summary.getBuildId());
@@ -61,6 +63,7 @@ public class ReportCollector implements FilePath.FileCallable<SummaryBuildReport
                 buildReportBean.setExternalUrl(trimToNull(xmlReport.getExternalLink()));
                 buildReportBean.setStatistics(xmlReport.getStatistics());
                 buildReportBean.setTimeStatistics(xmlReport.getTimeStatistics());
+                buildReportBean.setXmlReport(xmlReportContent);
 
                 buildReportBean.setResultFile(persistResult(buildReportBean.getId(), xmlReport));
                 summary.addBuildReport(buildReportBean);

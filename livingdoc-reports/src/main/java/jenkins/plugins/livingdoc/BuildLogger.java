@@ -1,6 +1,3 @@
-/**
- * 
- */
 package jenkins.plugins.livingdoc;
 
 import java.util.logging.Logger;
@@ -9,7 +6,7 @@ import hudson.model.BuildListener;
 
 
 /**
- * This logger writes information to the buils console.
+ * This logger writes information to the build console.
  * 
  * @author Anis Ben Hamidene
  *
