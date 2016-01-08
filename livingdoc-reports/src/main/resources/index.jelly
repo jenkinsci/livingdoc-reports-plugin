@@ -1,4 +1,4 @@
 <div>
-	<img src="${app.rootUrl}plugin/livingdoc-reports/images/ld_16.png"/>
-	This plugin integrates <a href="http://aqe.novatec-gmbh.de">testIT LivingDoc </a> test reports to Jenkins and publishes the results to a confluence instance with testIT LivingDoc support.
+	<img src="${app.rootUrl}plugin/livingdoc-reports/images/ld_logo_16.png"/>
+	This plugin integrates <a href="https://testit-livingdoc.atlassian.net/wiki/">testIT LivingDoc </a> test reports to Jenkins and publishes the results to a confluence instance with testIT LivingDoc support.
 </div>

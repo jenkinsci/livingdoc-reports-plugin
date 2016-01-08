@@ -2,8 +2,8 @@
          xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
 	<j:if test="${from.hasSummaries()}">
 		<div class="test-trend-caption">
-			testIT LivingDoc Historie
+			testIT LivingDoc Result-History
 		</div>
-		<img id="gp_project_graph" src="${from.urlName}/graph/png" width="750" height="450" alt="[testIT LivingDoc Historie]"/>
+		<img id="gp_project_graph" src="${from.urlName}/graph/png" width="750" height="450" alt="[testIT LivingDoc Result-History]"/>
 	</j:if>
 </j:jelly>
