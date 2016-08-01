@@ -10,7 +10,7 @@
 
 	<groupId>info.novatec.testit</groupId>
 	<artifactId>livingdoc-jenkins</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.title}</name>
 	<url>https://github.com/testIT-LivingDoc</url>
