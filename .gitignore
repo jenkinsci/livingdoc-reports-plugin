@@ -7,7 +7,9 @@ NOTICE
 
 **/.metadata/
 **/target/
+.idea
 
 target
 work
 *.class
+*.iml
