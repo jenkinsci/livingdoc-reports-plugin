@@ -1,157 +1,144 @@
-/**
- * Copyright (c) 2009 Pyxis Technologies inc.
- *
- * This is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA,
- * or see the FSF site: http://www.fsf.org.
- */
 package jenkins.plugins.livingdoc;
-
-import hudson.model.ParameterValue;
-import hudson.model.ProminentProjectAction;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Actionable;
-import hudson.model.ParametersAction;
-import hudson.model.StringParameterValue;
-import hudson.util.Graph;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-
-import jenkins.plugins.livingdoc.chart.ProjectSummaryChart;
+import java.util.logging.Logger;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 
+import hudson.model.Actionable;
+import hudson.model.Job;
+import hudson.model.ParameterValue;
+import hudson.model.ParametersAction;
+import hudson.model.ProminentProjectAction;
+import hudson.model.Run;
+import hudson.model.StringParameterValue;
+import hudson.util.Graph;
+import jenkins.plugins.livingdoc.chart.ProjectSummaryChart;
+
+
 public class LivingDocProjectAction extends Actionable implements ProminentProjectAction {
 
-	public static final String LD_CHART_MAX_COUNT_BUILDS = "LD_CHART_MAX_COUNT_BUILDS";
+    public static final String LD_CHART_MAX_COUNT_BUILDS = "LD_CHART_MAX_COUNT_BUILDS";
+    private static Logger LOGGER = Logger.getLogger(LivingDocProjectAction.class.getCanonicalName());
 
-	private final AbstractProject<?, ?> project;
+    private final Job< ? , ? > project;
 
-	public LivingDocProjectAction(AbstractProject<?, ?> project) {
-		super();
+    public LivingDocProjectAction(Job< ? , ? > job) {
+        super();
 
-		this.project = project;
-	}
-
-	public AbstractProject<?, ?> getProject() {
-		return project;
-	}
-
-	public String getIconFileName() {
-		return ResourceUtils.BIG_ICON_URL;
-	}
-
-	public String getSearchUrl() {
-		return getUrlName();
+        this.project = job;
     }
 
-	public String getUrlName() {
-		return ResourceUtils.PLUGIN_CONTEXT_BASE;
-	}
+    public Job< ? , ? > getProject() {
+        return project;
+    }
 
-	public String getDisplayName() {
-		return "testIT LivingDoc";
-	}
+    public String getIconFileName() {
+        return ResourceUtils.BIG_ICON_URL;
+    }
 
-	public List<SummaryBuildReportBean> getSummaries() {
-		return getAllLivingDocBuildSummaries();
-	}
+    public String getSearchUrl() {
+        return getUrlName();
+    }
 
-	public boolean hasSummaries() {
-		return getAllLivingDocBuildSummaries().size() > 0;
-	}
+    public String getUrlName() {
+        return ResourceUtils.PLUGIN_CONTEXT_BASE;
+    }
 
-	public void doIndex(StaplerRequest request, StaplerResponse response) throws IOException {
+    public String getDisplayName() {
+        return ResourceUtils.LIVINGDOC_NAME;
+    }
 
-		AbstractBuild<?, ?> build = findLatestLivingDocBuild();
+    public List<SummaryBuildReportBean> getSummaries() {
+        return getAllLivingDocBuildSummaries();
+    }
 
-		if (build == null) {
-			response.sendRedirect2("nodata");
-		} else {
-			int buildId = build.getNumber();
-			response.sendRedirect2(String.format("../%s/" + ResourceUtils.PLUGIN_CONTEXT_BASE, buildId));
-		}
-	}
+    public boolean hasSummaries() {
+        return getAllLivingDocBuildSummaries().size() > 0;
+    }
 
-	public Graph getGraph() {
-		Calendar timestamp = project.getLastCompletedBuild().getTimestamp();
-		return new ProjectSummaryChart(timestamp, getAllLivingDocBuildSummaries());
-	}
+    public void doIndex(StaplerRequest request, StaplerResponse response) throws IOException {
 
-	private List<SummaryBuildReportBean> getAllLivingDocBuildSummaries() {
+        Run< ? , ? > build = findLatestLivingDocRun();
 
-		List<SummaryBuildReportBean> summaries = new ArrayList<SummaryBuildReportBean>();
-		int maxCountBuilds = getChartMaxCountBuilds();
-		int count = 0;
-		boolean mayAddEntries = maxCountBuilds == -1 || count <= maxCountBuilds;
-		for (AbstractBuild<?, ?> build = project.getLastBuild(); build != null && mayAddEntries; build = build.getPreviousBuild()) {
+        if (build == null) {
+            response.sendRedirect2("nodata");
+        } else {
+            int buildId = build.getNumber();
+            response.sendRedirect2(String.format("../%s/" + ResourceUtils.PLUGIN_CONTEXT_BASE, buildId));
+        }
+    }
 
-			LivingDocBuildAction buildAction = findBuildAction(build);
+    public Graph getGraph() {
+        Calendar timestamp = project.getLastCompletedBuild().getTimestamp();
+        return new ProjectSummaryChart(timestamp, getAllLivingDocBuildSummaries());
+    }
 
-			if (buildAction != null) {
-				summaries.add(buildAction.getSummary());
-				if (maxCountBuilds > -1) {
-					count++;
-					mayAddEntries = count < maxCountBuilds;
-				}
-			}
-		}
+    private List<SummaryBuildReportBean> getAllLivingDocBuildSummaries() {
 
-		Collections.reverse(summaries);
+        List<SummaryBuildReportBean> summaries = new ArrayList<SummaryBuildReportBean>();
+        try {
+            int maxCountBuilds = getChartMaxCountBuilds();
+            int count = 0;
+            boolean mayAddEntries = maxCountBuilds == - 1 || count <= maxCountBuilds;
+            for (Run< ? , ? > run = project.getLastBuild(); run != null && mayAddEntries; run = run.getPreviousBuild()) {
 
-		return summaries;
-	}
+                LivingDocBuildAction buildAction = findBuildAction(run);
 
-	@SuppressWarnings("rawtypes")
-	private int getChartMaxCountBuilds() {
+                if (buildAction != null) {
+                    summaries.add(buildAction.getSummary());
+                    if (maxCountBuilds > - 1) {
+                        count ++ ;
+                        mayAddEntries = count < maxCountBuilds;
+                    }
+                }
+            }
 
-		int maxCountBuilds = -1;
+            Collections.reverse(summaries);
+        } catch (Exception e) {
+            LOGGER.warning("Last build not found :" + e.getMessage());
+        }
+        return summaries;
+    }
 
-		AbstractBuild lastBuild = project.getLastBuild();
-		if (lastBuild != null) {
-			ParametersAction action = lastBuild.getAction(ParametersAction.class);
-			if (action != null) {
-				ParameterValue paramValue = action.getParameter(LD_CHART_MAX_COUNT_BUILDS);
-				if (paramValue != null && paramValue instanceof StringParameterValue) {
-					String stringValue = ((StringParameterValue) paramValue).value;
-					maxCountBuilds = Integer.parseInt(stringValue);
-				}
-			}
-		}
-		return maxCountBuilds;
+    private int getChartMaxCountBuilds() {
 
-	}
+        int maxCountBuilds = - 1;
 
-	private AbstractBuild<?, ?> findLatestLivingDocBuild() {
+        Run< ? , ? > lastRun = project.getLastBuild();
+        if (lastRun != null) {
+            ParametersAction action = lastRun.getAction(ParametersAction.class);
+            if (action != null) {
+                ParameterValue paramValue = action.getParameter(LD_CHART_MAX_COUNT_BUILDS);
+                if (paramValue != null && paramValue instanceof StringParameterValue) {
+                    String stringValue = ( ( StringParameterValue ) paramValue ).value;
+                    maxCountBuilds = Integer.parseInt(stringValue);
+                }
+            }
+        }
 
-		for (AbstractBuild<?, ?> build = project.getLastBuild(); build != null; build = build.getPreviousBuild()) {
+        return maxCountBuilds;
 
-			if (findBuildAction(build) != null) {
-				return build;
-			}
-		}
+    }
 
-		return null;
-	}
+    private Run< ? , ? > findLatestLivingDocRun() {
 
-	private LivingDocBuildAction findBuildAction(AbstractBuild<?, ?> build) {
-		return build.getAction(LivingDocBuildAction.class);
-	}
+        for (Run< ? , ? > run = project.getLastBuild(); run != null; run = run.getPreviousBuild()) {
+
+            if (findBuildAction(run) != null) {
+                return run;
+            }
+        }
+
+        return null;
+    }
+
+    private LivingDocBuildAction findBuildAction(Run< ? , ? > run) {
+        return run.getAction(LivingDocBuildAction.class);
+    }
 }

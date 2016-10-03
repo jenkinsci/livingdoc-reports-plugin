@@ -1,69 +1,74 @@
-/**
- * Copyright (c) 2009 Pyxis Technologies inc.
- *
- * This is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- *
- * This software is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program; if not, write to the Free Software Foundation, Inc., 51
- * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site:
- * http://www.fsf.org.
- */
 package jenkins.plugins.livingdoc;
 
-import hudson.model.HealthReport;
-import hudson.model.HealthReportingAction;
-import hudson.model.AbstractBuild;
-import jenkins.plugins.livingdoc.results.BuildSummaryResult;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Logger;
 
 import org.kohsuke.stapler.StaplerProxy;
 
+import hudson.model.Action;
+import hudson.model.HealthReport;
+import hudson.model.HealthReportingAction;
+import hudson.model.Run;
+import jenkins.plugins.livingdoc.results.BuildSummaryResult;
+import jenkins.tasks.SimpleBuildStep;
 
-public class LivingDocBuildAction implements HealthReportingAction, StaplerProxy {
 
-    private final AbstractBuild< ? , ? > build;
+public class LivingDocBuildAction implements HealthReportingAction, StaplerProxy, SimpleBuildStep.LastBuildAction {
+
+    private static Logger LOGGER = Logger.getLogger(LivingDocBuildAction.class.getCanonicalName());
+
+    private final Run< ? , ? > run;
     private final SummaryBuildReportBean summary;
 
-    public LivingDocBuildAction (AbstractBuild< ? , ? > build, SummaryBuildReportBean summary) {
-        this.build = build;
+    List<LivingDocProjectAction> projectActions;
+
+    public LivingDocBuildAction(Run< ? , ? > run, SummaryBuildReportBean summary) {
+        this.run = run;
         this.summary = summary;
+
+        projectActions = new ArrayList<LivingDocProjectAction>();
+        if (run != null && run.getParent() != null) {
+            projectActions.add(new LivingDocProjectAction(run.getParent()));
+        }else{
+            LOGGER.warning("Run or parent not definied !");
+        }
     }
 
-    public SummaryBuildReportBean getSummary () {
+    public SummaryBuildReportBean getSummary() {
         return summary;
     }
 
-    public HealthReport getBuildHealth () {
+    public HealthReport getBuildHealth() {
 
         BuildSummaryResult result = getResult();
 
         return new HealthReport(result.getSuccessRate(), Messages._LivingDocBuildAction_description(result.getStatistics()));
     }
 
-    public String getIconFileName () {
+    public String getIconFileName() {
         return ResourceUtils.BIG_ICON_URL;
     }
 
-    public String getUrlName () {
+    public String getUrlName() {
         return ResourceUtils.PLUGIN_CONTEXT_BASE;
     }
 
-    public String getDisplayName () {
-        return "testIT LivingDoc";
+    public String getDisplayName() {
+        return ResourceUtils.LIVINGDOC_NAME;
     }
 
-    public Object getTarget () {
+    public Object getTarget() {
         return getResult();
     }
 
-    private BuildSummaryResult getResult () {
-        return new BuildSummaryResult(build, summary);
+    private BuildSummaryResult getResult() {
+        return new BuildSummaryResult(run, summary);
+    }
+
+    @Override
+    public Collection< ? extends Action> getProjectActions() {
+        return projectActions;
     }
 }

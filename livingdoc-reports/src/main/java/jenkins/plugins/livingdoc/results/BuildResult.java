@@ -18,34 +18,31 @@
  */
 package jenkins.plugins.livingdoc.results;
 
-import hudson.model.AbstractBuild;
-import info.novatec.testit.livingdoc.util.ExceptionImposter;
-
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Serializable;
-
-import jenkins.plugins.livingdoc.BuildReportBean;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.IOUtils;
+
+import hudson.model.Run;
+import info.novatec.testit.livingdoc.util.ExceptionImposter;
+import jenkins.plugins.livingdoc.BuildReportBean;
 
 
 public class BuildResult implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    private final AbstractBuild< ? , ? > build;
+    private static final long serialVersionUID = 2L;
+    private final transient Run< ? , ? > run;
     private final BuildReportBean report;
 
-    public BuildResult (AbstractBuild< ? , ? > build, BuildReportBean report) {
-        this.build = build;
+    public BuildResult (Run< ? , ? > run, BuildReportBean report) {
+        this.run = run;
         this.report = report;
     }
 
-    public AbstractBuild< ? , ? > getBuild () {
-        return build;
-    }
-
+   
     public BuildReportBean getReport () {
         return report;
     }
@@ -61,16 +58,20 @@ public class BuildResult implements Serializable {
             throw new IllegalStateException("No results!");
         }
 
-        FileReader reader = null;
+        InputStreamReader reader = null;
 
         try {
-            reader = new FileReader(report.getResultFile());
-
+            reader =  new InputStreamReader(new FileInputStream(report.getResultFile()), Charset.forName("UTF-8"));
             return IOUtils.toString(reader);
         } catch (IOException ex) {
             throw ExceptionImposter.imposterize(ex);
         } finally {
             IOUtils.closeQuietly(reader);
         }
+    }
+
+
+    public Run< ? , ? > getRun() {
+        return run;
     }
 }

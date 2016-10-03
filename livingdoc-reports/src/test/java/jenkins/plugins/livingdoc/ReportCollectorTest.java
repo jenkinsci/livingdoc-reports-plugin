@@ -87,6 +87,6 @@ public class ReportCollectorTest {
 
 	private ReportCollector newReportCollector(
 			String testResultsPattern) throws Exception {
-		return new ReportCollector(buildDir, 1, null,testResultsPattern);
+		return new ReportCollector(buildDir, 1, testResultsPattern);
 	}
 }

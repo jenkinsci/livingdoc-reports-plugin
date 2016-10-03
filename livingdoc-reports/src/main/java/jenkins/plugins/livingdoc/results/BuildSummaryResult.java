@@ -18,36 +18,32 @@
  */
 package jenkins.plugins.livingdoc.results;
 
-import hudson.model.AbstractBuild;
-import info.novatec.testit.livingdoc.Statistics;
-import info.novatec.testit.livingdoc.TimeStatistics;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
-import jenkins.plugins.livingdoc.BuildReportBean;
-import jenkins.plugins.livingdoc.SummaryBuildReportBean;
-
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+
+import hudson.model.Run;
+import info.novatec.testit.livingdoc.Statistics;
+import info.novatec.testit.livingdoc.TimeStatistics;
+import jenkins.plugins.livingdoc.BuildReportBean;
+import jenkins.plugins.livingdoc.SummaryBuildReportBean;
 
 
 public class BuildSummaryResult implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    private final AbstractBuild< ? , ? > build;
+    private static final long serialVersionUID = 2L;
+    private final transient Run< ? , ? > run;
     private final SummaryBuildReportBean summary;
 
-    public BuildSummaryResult (AbstractBuild< ? , ? > build, SummaryBuildReportBean summary) {
-        this.build = build;
+    public BuildSummaryResult (Run< ? , ? > run, SummaryBuildReportBean summary) {
+        this.run = run;
         this.summary = summary;
     }
 
-    public AbstractBuild< ? , ? > getBuild () {
-        return build;
-    }
+    
 
     public SummaryBuildReportBean getSummary () {
         return summary;
@@ -66,7 +62,7 @@ public class BuildSummaryResult implements Serializable {
     }
 
     public Object getDynamic (String token, StaplerRequest request, StaplerResponse response) throws IOException {
-        return new BuildResult(build, summary.findBuildById(Integer.parseInt(token)));
+        return new BuildResult(run, summary.findBuildById(Integer.parseInt(token)));
     }
 
     public int getSuccessRate () {
@@ -75,5 +71,11 @@ public class BuildSummaryResult implements Serializable {
 
     public int getSuccessRate (Statistics stats) {
         return ( int ) ( ( stats.rightCount() / ( double ) ( stats.totalCount() - stats.ignoredCount() ) ) * 100 );
+    }
+
+
+
+    public Run< ? , ? > getBuild() {
+        return run;
     }
 }

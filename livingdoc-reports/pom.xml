@@ -31,6 +31,10 @@
 			<groupId>xmlrpc</groupId>
 			<artifactId>xmlrpc</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>structs</artifactId>
+		</dependency>
 		<!-- TestIT dependencies -->
 
 		<dependency>
@@ -58,13 +62,46 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/filter</directory>
+				<filtering>true</filtering>
+				<targetPath>../filtered-sources</targetPath>
+				<includes>
+					<include>**/*.java</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<!-- include license and notice information -->
+				<directory>${project.root}</directory>
+				<includes>
+					<include>LICENSE</include>
+					<include>NOTICE</include>
+				</includes>
+			</resource>
+			<resource>
+				<!-- include all generated license information -->
+				<directory>${project.build.directory}/generated-sources/license</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
+					<useManifestOnlyJar>false</useManifestOnlyJar>
+					<useSystemClassLoader>true</useSystemClassLoader>
 					<excludes>
+						<exclude>**/Testing*.java</exclude>
 						<exclude>info/novatec/testit/livingdoc/**/*UITest.java</exclude>
 						<exclude>info/novatec/testit/livingdoc/util/HudsonUITestCase.java</exclude>
 					</excludes>
@@ -84,6 +121,36 @@
 								<include>info/novatec/testit/livingdoc/**/*UITest.java</include>
 							</includes>
 						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/filtered-sources</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
 					</execution>
 				</executions>
 			</plugin>

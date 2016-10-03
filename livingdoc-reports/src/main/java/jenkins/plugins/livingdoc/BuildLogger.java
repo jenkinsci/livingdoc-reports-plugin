@@ -2,7 +2,7 @@ package jenkins.plugins.livingdoc;
 
 import java.util.logging.Logger;
 
-import hudson.model.BuildListener;
+import hudson.model.TaskListener;
 
 
 /**
@@ -12,7 +12,7 @@ import hudson.model.BuildListener;
  *
  */
 public class BuildLogger {
-    private static BuildListener buildListener = null;
+    private static TaskListener taskListener = null;
     private static Logger LOGGER = Logger.getLogger(BuildLogger.class.getCanonicalName());
 
     private static final String LD_MARKER = "[LIVINGDOC] ";
@@ -20,44 +20,29 @@ public class BuildLogger {
     private static final String LD_WARN_MARKER = LD_MARKER + " WARNING :";
     private static final String LD_SEVERE_MARKER = LD_MARKER + " SEVERE :";
 
-    public static void intialize (BuildListener listener) {
-        buildListener = listener;
+    public static void intialize (TaskListener listener) {
+        taskListener = listener;
     }
 
-    /**
-     * Writes an Info message to the build logger;
-     * 
-     * @param message
-     */
     public static void info (String message) {
-        if (buildListener != null && buildListener.getLogger() != null) {
-            buildListener.getLogger().println(LD_INFO_MARKER + message);
+        if (taskListener != null && taskListener.getLogger() != null) {
+            taskListener.getLogger().println(LD_INFO_MARKER + message);
         } else {
             LOGGER.info(message);
         }
     }
 
-    /**
-     * Writes an Info message to the build logger;
-     * 
-     * @param message
-     */
     public static void warn (String message) {
-        if (buildListener != null && buildListener.getLogger() != null) {
-            buildListener.getLogger().println(LD_WARN_MARKER + message);
+        if (taskListener != null && taskListener.getLogger() != null) {
+            taskListener.getLogger().println(LD_WARN_MARKER + message);
         } else {
             LOGGER.warning(message);
         }
     }
 
-    /**
-     * Writes an Info message to the build logger;
-     * 
-     * @param message
-     */
     public static void severe (String message) {
-        if (buildListener != null && buildListener.getLogger() != null) {
-            buildListener.getLogger().println(LD_SEVERE_MARKER + message);
+        if (taskListener != null && taskListener.getLogger() != null) {
+            taskListener.getLogger().println(LD_SEVERE_MARKER + message);
         } else {
             LOGGER.severe(message);
         }

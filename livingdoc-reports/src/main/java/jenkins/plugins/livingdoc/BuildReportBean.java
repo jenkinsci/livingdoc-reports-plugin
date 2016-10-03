@@ -34,7 +34,7 @@ public class BuildReportBean implements Serializable {
 
     public static final Comparator<BuildReportBean> BY_ID = new Comparator<BuildReportBean>() {
         public int compare (BuildReportBean o1, BuildReportBean o2) {
-            return Integer.valueOf(o1.getBuildId()).compareTo(o2.getBuildId());
+            return Integer.compare(o1.getBuildId(),o2.getBuildId());
         }
     };
 

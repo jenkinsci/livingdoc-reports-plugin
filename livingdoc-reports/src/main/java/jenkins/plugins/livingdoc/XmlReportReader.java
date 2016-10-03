@@ -18,13 +18,11 @@
  */
 package jenkins.plugins.livingdoc;
 
-import hudson.FilePath;
-import info.novatec.testit.livingdoc.Statistics;
-import info.novatec.testit.livingdoc.TimeStatistics;
-
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
@@ -36,6 +34,10 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.ctc.wstx.stax.WstxInputFactory;
+
+import hudson.FilePath;
+import info.novatec.testit.livingdoc.Statistics;
+import info.novatec.testit.livingdoc.TimeStatistics;
 
 
 public class XmlReportReader {
@@ -94,11 +96,11 @@ public class XmlReportReader {
 
         this.name = getFilenameWithoutExtension(fileReport);
 
-        FileReader fileReader = null;
+        InputStreamReader fileReader = null;
         XMLEventReader xmlEventReader = null;
 
         try {
-            fileReader = new FileReader(new File(fileReport.toURI()));
+            fileReader = new  InputStreamReader(new FileInputStream(new File(fileReport.toURI())), Charset.forName("UTF-8"));
             xmlEventReader = XIF.createXMLEventReader(fileReader);
 
             while (xmlEventReader.hasNext()) {
@@ -157,7 +159,7 @@ public class XmlReportReader {
                     }
                 }
             }
-        } catch (Exception ex) {
+        } catch (XMLStreamException | InterruptedException | RuntimeException ex) {
             throw new IOException(String.format("Cannot read xml report file %s", fileReport), ex);
         } finally {
             IOUtils.closeQuietly(fileReader);

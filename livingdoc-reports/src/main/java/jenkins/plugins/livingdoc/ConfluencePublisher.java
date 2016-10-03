@@ -1,12 +1,5 @@
 package jenkins.plugins.livingdoc;
 
-import info.novatec.testit.livingdoc.repository.DocumentNotFoundException;
-import info.novatec.testit.livingdoc.server.rpc.xmlrpc.XmlRpcDataMarshaller;
-import info.novatec.testit.livingdoc.server.transfer.ExecutionResult;
-import info.novatec.testit.livingdoc.server.transfer.SpecificationLocation;
-import info.novatec.testit.livingdoc.util.CollectionUtil;
-import info.novatec.testit.livingdoc.util.URIUtil;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -19,15 +12,22 @@ import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Logger;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcRequest;
 
+import info.novatec.testit.livingdoc.repository.DocumentNotFoundException;
+import info.novatec.testit.livingdoc.server.rpc.xmlrpc.XmlRpcDataMarshaller;
+import info.novatec.testit.livingdoc.server.transfer.ExecutionResult;
+import info.novatec.testit.livingdoc.server.transfer.SpecificationLocation;
+import info.novatec.testit.livingdoc.util.CollectionUtil;
+import info.novatec.testit.livingdoc.util.URIUtil;
+
 
 public class ConfluencePublisher {
 
+    private static final Charset DEF_CHARSET = Charset.forName("UTF-8");
     private static final String[] REMOVEABLE_POSTFIXES = { ".html.xml", ".xml", ".html", ".htm" };
     private static final String LD_HANDLER = "livingdoc1";
     private static Logger LOGGER = Logger.getLogger(ConfluencePublisher.class.getCanonicalName());
@@ -102,7 +102,7 @@ public class ConfluencePublisher {
     }
 
     private String normalizeContent(String original) {
-        return StringUtils.toEncodedString(original.getBytes(), Charset.forName("UTF-8"));
+        return StringUtils.toEncodedString(original.getBytes(DEF_CHARSET), DEF_CHARSET);
 
     }
 
@@ -135,7 +135,7 @@ public class ConfluencePublisher {
         execResult.setXmlReport(normalizedXmlReport);
         
         Vector<Serializable> args = CollectionUtil.toVector(specificationLocation.getUsername(), specificationLocation.getPassword(), execResult.marshallize());
-        LOGGER.finest(String.format("Publishing execution rsult to confluence :\n %s", execResult));
+        LOGGER.finest(String.format("Publishing execution rsult to confluence :%n %s", execResult));
         String msg =
             ( String ) getXmlRpcClient().execute(new XmlRpcRequest(LD_HANDLER + ".saveExecutionResult", args));
 

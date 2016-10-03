@@ -19,16 +19,16 @@
 package jenkins.plugins.livingdoc;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
-import hudson.FilePath;
-import hudson.remoting.VirtualChannel;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
 import org.jenkinsci.remoting.RoleChecker;
+
+import hudson.FilePath;
+import hudson.remoting.VirtualChannel;
 
 
 public class ReportCollector implements FilePath.FileCallable<SummaryBuildReportBean> {
@@ -42,7 +42,7 @@ public class ReportCollector implements FilePath.FileCallable<SummaryBuildReport
 
     private int idGenerator = 1;
 
-    public ReportCollector (FilePath buildDir, int buildId, Map<String, String> buildVariables, String testResultsPattern)
+    public ReportCollector (FilePath buildDir, int buildId, String testResultsPattern)
         throws IOException, InterruptedException {
         livingDocReportDir = livingDocReportDir(buildDir);
         summary = new SummaryBuildReportBean(buildId);
