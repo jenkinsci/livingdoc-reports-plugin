@@ -42,9 +42,12 @@ public class SummaryBuildReportBean implements Serializable {
     }
 
     public boolean hasNoReports () {
-        return buildReports.isEmpty();
+        return buildReports == null || buildReports.isEmpty();
     }
 
+    public boolean hasReports () {
+        return !hasNoReports();
+    }
     public List<BuildReportBean> getBuildReports () {
         Collections.sort(buildReports, BuildReportBean.BY_ID);
         return buildReports;

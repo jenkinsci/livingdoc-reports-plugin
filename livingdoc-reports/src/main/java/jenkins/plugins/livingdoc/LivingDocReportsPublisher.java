@@ -26,7 +26,8 @@ import jenkins.tasks.SimpleBuildStep;
 import net.sf.json.JSONObject;
 
 
-public class LivingDocReportsPublisher extends Recorder implements SimpleBuildStep{
+@SuppressWarnings("unchecked")
+public class LivingDocReportsPublisher extends Recorder implements SimpleBuildStep {
 
     private static Logger LOGGER = Logger.getLogger(LivingDocReportsPublisher.class.getCanonicalName());
 
@@ -37,8 +38,8 @@ public class LivingDocReportsPublisher extends Recorder implements SimpleBuildSt
     public ConfluenceConfig confluenceConfig;
     public boolean publishToConfluence = false;
 
-
-    @Extension @Symbol("livingdoc")
+    @Extension
+    @Symbol("livingdoc")
     public static class LivingDocDescriptor extends BuildStepDescriptor<Publisher> {
 
         private static final int DEFAULT_FAILURE_THRESHOLD = 20;
@@ -65,10 +66,10 @@ public class LivingDocReportsPublisher extends Recorder implements SimpleBuildSt
             if (staplerRequest != null) {
                 LivingDocReportsPublisher publisher = staplerRequest.bindJSON(LivingDocReportsPublisher.class, formData);
                 return publisher;
-            }else{
+            } else {
                 throw new FormException("Could not intialize publisher", "testResultsPattern");
             }
-                
+
         }
 
         public FormValidation doCheckTestResultsPattern(@QueryParameter final String testResultsPattern) {
@@ -109,51 +110,46 @@ public class LivingDocReportsPublisher extends Recorder implements SimpleBuildSt
         this.publishToConfluence = ( confluenceConfig != null );
 
     }
-    
+
     @Override
-    public void perform(Run< ? , ? > run, FilePath filePath, Launcher launcher, TaskListener taskListener) throws InterruptedException,
-        IOException {
+    public void perform(Run< ? , ? > run, FilePath filePath, Launcher launcher, TaskListener taskListener)
+        throws InterruptedException, IOException {
         BuildLogger.intialize(taskListener);
         if (filePath != null) {
             FilePath runDir = new FilePath(run.getRootDir());
-            
+
             SummaryBuildReportBean summary = filePath.act(new ReportCollector(runDir, run.getNumber(), testResultsPattern));
 
-            if (summary.hasNoReports()) {
-                throw new AbortException("No LivingDoc test report files were found. Configuration error?");
-            }
+            if (summary != null && summary.hasReports()) {
 
-            if (confluenceConfig != null) {
-                ConfluencePublisher confluencePublisher = new ConfluencePublisher(confluenceConfig);
-                confluencePublisher.publishToConfluence(summary);
+                if (confluenceConfig != null) {
+                    ConfluencePublisher confluencePublisher = new ConfluencePublisher(confluenceConfig);
+                    confluencePublisher.publishToConfluence(summary);
+                }
+                LivingDocBuildAction action = run.getAction(LivingDocBuildAction.class);
+                if (action == null) {
+                    action = new LivingDocBuildAction(run, summary);
+
+                }
+
+                run.addAction(action);
+                BuildLogger.info("Test results :" + summary.getStatistics());
+                computeBuildResult(summary, run);
+            }else{
+                BuildLogger.warn("No test reports found.");
             }
-            LivingDocBuildAction action = run.getAction(LivingDocBuildAction.class);
-            if(action == null){
-                action = new LivingDocBuildAction(run, summary);
-               
-            }
-           
-            run.addAction(action);
-            BuildLogger.info("Test results :" + summary.getStatistics());
-            computeBuildResult(summary, run);
         } else {
             throw new AbortException("Please configure workspace folder (missing)");
         }
     }
-    
-   
 
-   
-
-   
-   
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.NONE;
     }
 
     private void computeBuildResult(SummaryBuildReportBean summary, Run< ? , ? > run) {
         int totalWithoutIgnored = summary.getStatistics().totalCount() - summary.getStatistics().ignoredCount();
-        int successRate = ( 100 * summary.getStatistics().rightCount() ) / totalWithoutIgnored;
+        int successRate = totalWithoutIgnored > 0 ?  ( 100 * summary.getStatistics().rightCount() ) / totalWithoutIgnored : 0;
         int failureRate = 100 - successRate;
         if (failureRate > failureThreshold) {
             BuildLogger.severe("Too much tests failed !!!!  (" + failureRate + "% [Threshold: " + failureThreshold + "%])");
@@ -164,9 +160,5 @@ public class LivingDocReportsPublisher extends Recorder implements SimpleBuildSt
         }
 
     }
-
-   
-
-      
 
 }
