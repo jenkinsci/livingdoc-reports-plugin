@@ -1,0 +1,156 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>info.novatec.testit</groupId>
+		<artifactId>livingdoc-jenkins</artifactId>
+		<version>1.2-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>livingdoc-reports</artifactId>
+	<packaging>hpi</packaging>
+	<name>${project.title} | Reports Plugin</name>
+	<url>https://github.com/testIT-LivingDoc/livingdoc-jenkins</url>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>info.novatec.testit</groupId>
+			<artifactId>livingdoc-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>xmlrpc</groupId>
+			<artifactId>xmlrpc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>structs</artifactId>
+		</dependency>
+		<!-- TestIT dependencies -->
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Mock -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Selenium 2 (aka WebDriver) -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-firefox-driver</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/filter</directory>
+				<filtering>true</filtering>
+				<targetPath>../filtered-sources</targetPath>
+				<includes>
+					<include>**/*.java</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<!-- include license and notice information -->
+				<directory>${project.root}</directory>
+				<includes>
+					<include>LICENSE</include>
+					<include>NOTICE</include>
+				</includes>
+			</resource>
+			<resource>
+				<!-- include all generated license information -->
+				<directory>${project.build.directory}/generated-sources/license</directory>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<useManifestOnlyJar>false</useManifestOnlyJar>
+					<useSystemClassLoader>true</useSystemClassLoader>
+					<excludes>
+						<exclude>**/Testing*.java</exclude>
+						<exclude>info/novatec/testit/livingdoc/**/*UITest.java</exclude>
+						<exclude>info/novatec/testit/livingdoc/util/HudsonUITestCase.java</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>none</exclude>
+							</excludes>
+							<includes>
+								<include>info/novatec/testit/livingdoc/**/*UITest.java</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>target/filtered-sources</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	
+</project>

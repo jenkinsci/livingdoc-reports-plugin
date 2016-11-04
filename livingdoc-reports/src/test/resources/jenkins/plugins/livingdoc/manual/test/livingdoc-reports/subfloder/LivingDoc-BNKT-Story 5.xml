@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><documents><document><name><![CDATA[Story 5]]></name><time-statistics><execution>37</execution><total>221</total></time-statistics><statistics><success>3</success><failure>0</failure><error>1</error><ignored>0</ignored></statistics><results><![CDATA[<html>
+<head>
+<title>Story 5</title>
+<meta name="title" content="Story 5"/>
+</head>
+<body>
+<table style="display:none">
+	<tr>
+		<td>Begin Info</td>
+	</tr>
+</table>
+<div style="padding:0px; margin:0px; ">
+		
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> <b>Story #5:</b> </th>
+<th class='confluenceTh'> The bank representative is allowed to freeze an account. </th>
+</tr>
+<tr>
+<td class='confluenceTd'><b>Actor:</b> </td>
+<td class='confluenceTd'> Bank representative </td>
+</tr>
+<tr>
+<td class='confluenceTd'><b>Business rules:</b> </td>
+<td class='confluenceTd'><ul>
+	<li>The user is allowed to freeze an account</li>
+	<li>Once an account is frozen, the system only allow deposit</li>
+</ul>
+</td>
+</tr>
+</tbody></table>
+
+</div>
+<table style="display:none">
+	<tr>
+		<td>End Info</td>
+	</tr>
+</table>
+
+<hr />
+
+<p><b>Example:</b></p>
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'>Do with</td>
+<td class='confluenceTd'> bank</td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #FFFFAA;">Create<hr/><pre><font size="-2">java.lang.NullPointerException<br/>com.greenpepper.samples.application.bank.BankFixture.createAccountForWithBalanceOf(BankFixture.java:86)<br/>sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br/>sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)<br/>sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)<br/>java.lang.reflect.Method.invoke(Method.java:597)<br/>com.greenpepper.reflect.StaticInvocation.send(StaticInvocation.java:48)<br/>com.greenpepper.reflect.InvocationMessage.send(InvocationMessage.java:35)<br/>com.greenpepper.Call.execute(Call.java:63)<br/>com.greenpepper.interpreter.flow.dowith.DefaultRow.interpret(DefaultRow.java:57)<br/>com.greenpepper.interpreter.flow.AbstractFlowInterpreter.execute(AbstractFlowInterpreter.java:65)<br/>com.greenpepper.interpreter.flow.AbstractFlowInterpreter.interpret(AbstractFlowInterpreter.java:39)</font></pre></td>
+<td class='confluenceTd'> savings </td>
+<td class='confluenceTd'> account </td>
+<td class='confluenceTd'>12345-67890 </td>
+<td class='confluenceTd'>for </td>
+<td class='confluenceTd'> Fred </td>
+<td class='confluenceTd'> </td>
+<td class='confluenceTd'> Flintstone </td>
+<td class='confluenceTd'> with balance of</td>
+<td class='confluenceTd'> 1546.23</td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;">Accept</td>
+<td class='confluenceTd'>withdraw </td>
+<td class='confluenceTd'> $100.00 </td>
+<td class='confluenceTd'>from account</td>
+<td class='confluenceTd'> 12345-67890 </td>
+<td class='confluenceTd'> using </td>
+<td class='confluenceTd'> ATM</td>
+</tr>
+<tr>
+<td class='confluenceTd'>Freeze account</td>
+<td class='confluenceTd'> 12345-67890 </td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;">Reject</td>
+<td class='confluenceTd'>withdraw </td>
+<td class='confluenceTd'> $100.25 </td>
+<td class='confluenceTd'>from account</td>
+<td class='confluenceTd'> 12345-67890 </td>
+<td class='confluenceTd'> using </td>
+<td class='confluenceTd'> ATM</td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;">Accept</td>
+<td class='confluenceTd'>deposit </td>
+<td class='confluenceTd'> $200.00 </td>
+<td class='confluenceTd'>in account</td>
+<td class='confluenceTd'> 12345-67890 </td>
+</tr>
+</tbody></table>
+</body>
+</html>]]></results></document></documents>

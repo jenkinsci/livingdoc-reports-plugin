@@ -1,0 +1,30 @@
+[![License](https://img.shields.io/badge/License-GNU%20General%20Public%20License%203.0-brightgreen.svg)](http://www.gnu.org/licenses/gpl-3.0.txt)
+
+![testIT LivingDoc Reports](documentation/images/livingdoc-reports-jenkins-chart.png)
+
+LivingDoc is a powerful tool that supports implementing collaboration driven methods like Behavior Driven Development or Specification By Example. Due to its smart integration into Atlassian Confluence the comfortable editing possibilities of confluences can be used to write the feature specifications and the acceptance tests.
+
+The jenkins reports plugin parses the execution results of LivingDoc, prepares them to be displayed in jenkins and when needed it publishes them to Confluence
+
+
+### Documentation
+The [user documentation](https://testit-livingdoc.atlassian.net/wiki) provides in-depth documentation on all the features.
+If you have further questions please get in touch with us.
+
+### Contribute
+
+Check the [Contributing](https://testit-livingdoc.atlassian.net/wiki/display/CURDOC/Contributing) documentation.
+
+### Issues
+If you experience any issues please use GitHub's [issue](https://github.com/testIT-LivingDoc/livingdoc-jenkins/issues) system to tell us about it!
+
+### Licensing
+testIT LivingDoc is licensed under [GNU General Public License, Version 3.0](http://www.gnu.org/licenses/gpl-3.0.txt).
+
+
+### Sponsoring
+testIT LivingDoc is mainly developed by [NovaTec Solutions GmbH](http://www.novatec-gmbh.de/), a German consultancy firm that drives quality in software development projects.
+
+### Origin
+testIT LivingDoc is a fork of the great but deprecated GreenPepper.
+We thank the GreenPepper Team from Pyxis for their support in the first migration stages!

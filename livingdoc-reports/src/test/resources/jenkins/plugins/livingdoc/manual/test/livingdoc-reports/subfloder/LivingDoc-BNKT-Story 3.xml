@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><documents><document><name><![CDATA[Story 3]]></name><external-link><![CDATA[http://www.greenpeppersoftware.com/confluence/display/BNKT/Story+3]]></external-link><time-statistics><execution>70</execution><total>314</total></time-statistics><statistics><success>12</success><failure>0</failure><error>0</error><ignored>0</ignored></statistics><results><![CDATA[<html>
+<head>
+<title>Story 3</title>
+<meta name="title" content="Story 3"/>
+</head>
+<body>
+<table style="display:none">
+	<tr>
+		<td>Begin Info</td>
+	</tr>
+</table>
+<div style="padding:0px; margin:0px; ">
+		
+
+<table class='confluenceTable'><tbody>
+<tr>
+<th class='confluenceTh'> <b>Story #3:</b> </th>
+<th class='confluenceTh'> The system calculates the proper withdraw fees depending on the type of account and the type of withdraw. </th>
+</tr>
+<tr>
+<td class='confluenceTd'> <b>Actor:</b> </td>
+<td class='confluenceTd'> System </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <b>Business rules:</b> </td>
+<td class='confluenceTd'><ul>
+	<li>Before the withdraw is made in an account, the system calculate the fees to be charged depending on the type of account and the type of withdraw.</li>
+	<li>We have 2 types of account: Checking and Saving</li>
+	<li>We have 3 types of withdraw: ATM, Interact, Personal Check</li>
+	<li>Fees are charged at the moment of the withdraw</li>
+</ul>
+</td>
+</tr>
+</tbody></table>
+</div>
+<table style="display:none">
+	<tr>
+		<td>End Info</td>
+	</tr>
+</table>
+
+
+<h4 id="Story3-BUSINESSRULES%3ACalculationofwithdrawalfees">BUSINESS RULES: Calculation of withdrawal fees</h4>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'> <b>Rule For</b> </td>
+<td class='confluenceTd'> Withdrawal Fees </td>
+</tr>
+<tr>
+<th class='confluenceTh'> Account Type </th>
+<th class='confluenceTh'> Withdraw Type </th>
+<th class='confluenceTh'> Fees? </th>
+</tr>
+<tr>
+<td class='confluenceTd'> Savings </td>
+<td class='confluenceTd'> ATM </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> $1.50 </td>
+</tr>
+<tr>
+<td class='confluenceTd'> Savings </td>
+<td class='confluenceTd'> Interact </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> $2.50 </td>
+</tr>
+<tr>
+<td class='confluenceTd'> Savings </td>
+<td class='confluenceTd'> Personal Check </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> $.50 </td>
+</tr>
+<tr>
+<td class='confluenceTd'> Checking </td>
+<td class='confluenceTd'> ATM </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> $0.00</td>
+</tr>
+<tr>
+<td class='confluenceTd'> Checking </td>
+<td class='confluenceTd'> Interact </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> $2.50 </td>
+</tr>
+<tr>
+<td class='confluenceTd'> Checking </td>
+<td class='confluenceTd'> Personal Check </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> $0.00</td>
+</tr>
+<tr>
+<td class='confluenceTd'> Checking </td>
+<td class='confluenceTd'> Personal Check </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> $0.00</td>
+</tr>
+</tbody></table>
+
+<h4 id="Story3-Example%3A">Example:</h4>
+
+<table class='confluenceTable'><tbody>
+<tr>
+<td class='confluenceTd'> <b>Do with</b> </td>
+<td class='confluenceTd'> bank </td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> Create </td>
+<td class='confluenceTd'> savings </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> account </td>
+<td class='confluenceTd'> 12345-15925 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> for</td>
+<td class='confluenceTd'> Fred </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> </td>
+<td class='confluenceTd'> Flintstone </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;">with balance of </td>
+<td class='confluenceTd'> $900.50 </td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> Withdraw </td>
+<td class='confluenceTd'> $100.25 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> from account </td>
+<td class='confluenceTd'> 12345-15925 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> using </td>
+<td class='confluenceTd'> ATM </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <b>Check</b> </td>
+<td class='confluenceTd'> that balance of account </td>
+<td class='confluenceTd'> 12345-15925 </td>
+<td class='confluenceTd'> is </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 798.75 </td>
+</tr>
+<tr>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> Withdraw </td>
+<td class='confluenceTd'> 50.00 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> from account </td>
+<td class='confluenceTd'> 12345-15925 </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> using </td>
+<td class='confluenceTd'> Personal Check </td>
+</tr>
+<tr>
+<td class='confluenceTd'> <b>Check</b> </td>
+<td class='confluenceTd'> that balance of account </td>
+<td class='confluenceTd'> 12345-15925 </td>
+<td class='confluenceTd'> is </td>
+<td class='confluenceTd' style="background-color: #AAFFAA;"> 748.25 </td>
+</tr>
+</tbody></table>
+</body>
+</html>]]></results></document></documents>
