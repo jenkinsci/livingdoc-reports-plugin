@@ -146,7 +146,7 @@ public class LivingDocReportsPublisher extends Recorder implements SimpleBuildSt
                 }
                 LivingDocBuildAction action = run.getAction(LivingDocBuildAction.class);
                 if (action == null) {
-                    action = new LivingDocBuildAction(run, summary);
+                    action = new LivingDocBuildAction(run, summary.withoutXmlReports());
 
                 }
 

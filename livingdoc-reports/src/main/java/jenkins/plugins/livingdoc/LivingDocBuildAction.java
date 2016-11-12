@@ -24,7 +24,7 @@ public class LivingDocBuildAction implements HealthReportingAction, StaplerProxy
 
     private final SummaryBuildReportBean summary;
 
-    public LivingDocBuildAction(Run< ? , ? > run, SummaryBuildReportBean summary) {
+    public LivingDocBuildAction(Run< ? , ? > run , SummaryBuildReportBean summary) {
         this.run = run;
         this.summary = summary;
 
