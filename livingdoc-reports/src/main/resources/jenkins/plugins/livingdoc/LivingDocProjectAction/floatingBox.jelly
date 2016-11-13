@@ -1,10 +1,9 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local">
 	<div class="test-trend-caption">
-		testIT LivingDoc Result-History
+		LivingDoc Result-History
 	</div>
-		
-	<j:if test="${from.hasSummaries()}">
-		<img id="gp_project_graph" src="${from.urlName}/graph/png" width="750" height="450" alt="[testIT LivingDoc Result-History]"/>
+	 <j:if test="${from.hasSummaries()}"> 
+		<img id="ld_result_graph" src="${from.urlName}/graph/png" width="750" height="450" alt="[LivingDoc Result-History]"/>
 	</j:if>
 </j:jelly>

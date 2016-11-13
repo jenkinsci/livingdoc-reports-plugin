@@ -76,4 +76,9 @@ public class ConfluenceConfig {
         this.systemProperties = systemProperties;
     }
 
+    
+    String[] getListOfFilenamePrefixes(){
+        return StringUtils.split(filenamePrefix, " ,");
+    }
+    
 }

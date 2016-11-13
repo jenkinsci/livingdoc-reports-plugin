@@ -71,4 +71,11 @@ public class SummaryBuildReportBean implements Serializable {
     public boolean hasReports() {
         return ! hasNoReports();
     }
+    
+    public SummaryBuildReportBean withoutXmlReports(){
+        for(BuildReportBean report : buildReports){
+            report.setXmlReport(null);
+        }
+        return this;
+    }
 }

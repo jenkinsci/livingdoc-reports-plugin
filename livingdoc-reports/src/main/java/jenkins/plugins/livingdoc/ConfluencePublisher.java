@@ -12,6 +12,7 @@ import java.util.Properties;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.apache.xmlrpc.XmlRpcClient;
@@ -110,7 +111,7 @@ public class ConfluencePublisher {
     private SpecificationLocation findSpecificationLocationFor(List<SpecificationLocation> specLocationList, String location)
         throws DocumentNotFoundException {
         for (SpecificationLocation loc : specLocationList) {
-            if (loc.getSpecificationName().equals(location)){
+            if (loc.getSpecificationName().equals(location)) {
                 return loc;
             }
         }
@@ -130,9 +131,13 @@ public class ConfluencePublisher {
     String getLocation(String filename) {
         LOGGER.entering(getClass().getCanonicalName(), "getLocation", filename);
         StringBuilder location = new StringBuilder(filename);
-        if (StringUtils.isNotEmpty(confluenceConfig.getFilenamePrefix()) && filename.startsWith(confluenceConfig
-            .getFilenamePrefix())) {
-            location.delete(0, confluenceConfig.getFilenamePrefix().length());
+        String[] prefixes = confluenceConfig.getListOfFilenamePrefixes();
+        if (prefixes != null) {
+            for (int i = 0; i < prefixes.length; i ++ ) {
+                if (filename.startsWith(prefixes[i])) {
+                    location.delete(0, prefixes[i].length());
+                }
+            }
         }
 
         for (String postfix : REMOVEABLE_POSTFIXES) {
@@ -198,8 +203,7 @@ public class ConfluencePublisher {
         }
     }
 
-    private void saveExecutionResult(SpecificationLocation specificationLocation, String normalizedXmlReport)
-         {
+    private void saveExecutionResult(SpecificationLocation specificationLocation, String normalizedXmlReport) {
         URI location = URI.create(URIUtil.raw(specificationLocation.getBaseTestUrl()));
 
         ExecutionResult execResult = new ExecutionResult();
@@ -217,11 +221,9 @@ public class ConfluencePublisher {
             if ( ! ( ExecutionResult.SUCCESS.equals(msg) )) {
                 throw new IllegalStateException(msg);
             }
-        } catch (XmlRpcException | IOException e) { 
+        } catch (XmlRpcException | IOException e) {
             throw new IllegalStateException(e);
         }
-
-        
 
     }
 

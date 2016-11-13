@@ -5,7 +5,7 @@
 	<l:layout xmlns:livingdoc="/hudson/plugins/livingdoc-reports/tags" css="/plugin/livingdoc-reports/css/style.css">
 		<st:include it="${it.build}" page="sidepanel.jelly"/>
 		<l:main-panel>
-			<h1 id="ld_build_${it.build.number}">testIT LivingDoc Test Report (Build: ${it.build.number})</h1>
+			<h1 id="ld_build_${it.build.number}">LivingDoc Test Report (Build: ${it.build.number})</h1>
 			<table class="pane">
 				<tbody>
 					<tr>

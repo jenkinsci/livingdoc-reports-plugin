@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -110,7 +109,8 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
     }
 
     public Graph getGraph() {
-        Calendar timestamp = project.getLastCompletedBuild().getTimestamp();
+        Calendar timestamp =project.getLastBuild() == null ? Calendar.getInstance() : project.getLastCompletedBuild().getTimestamp();
+        
         return new ProjectSummaryChart(timestamp, getAllLivingDocBuildSummaries());
     }
 
@@ -136,5 +136,14 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
 
     public boolean hasSummaries() {
         return getAllLivingDocBuildSummaries().size() > 0;
+    }
+    
+    public LivingDocBuildAction getLastBuildAction() {
+        Run<? , ?> run = project.getLastBuild();
+        if (run != null) {
+            return run.getAction(LivingDocBuildAction.class);
+        }
+
+        return null;
     }
 }
