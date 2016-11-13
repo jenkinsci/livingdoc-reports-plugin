@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>info.novatec.testit</groupId>
 		<artifactId>livingdoc-jenkins</artifactId>
-		<version>1.2-SNAPSHOT</version>
+		<version>1.2.3</version>
 	</parent>
 
 	<artifactId>livingdoc-reports</artifactId>
