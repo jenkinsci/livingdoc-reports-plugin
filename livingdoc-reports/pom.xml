@@ -10,7 +10,7 @@
 
 	<artifactId>livingdoc-reports</artifactId>
 	<packaging>hpi</packaging>
-	<name>${project.title} | Reports Plugin</name>
+	<name>LivingDoc - Jenkins Reports Plugin</name>
 	<url>https://github.com/testIT-LivingDoc/livingdoc-jenkins</url>
 
 

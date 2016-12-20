@@ -12,7 +12,7 @@
 	<artifactId>livingdoc-jenkins</artifactId>
 	<version>1.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>${project.title}</name>
+	<name>LivingDoc - Jenkins</name>
 	<url>https://github.com/testIT-LivingDoc</url>
 
 	<organization>
@@ -33,10 +33,8 @@
 		<url>git@github.com:Novatec-Consulting-GmbH/ca-aqe-livingdoc-jenkins.git</url>
 	</scm>
 	<properties>
-		<project.title>testIT LivingDoc | Jenkins</project.title>
 		<livingdoc.version>1.3-SNAPSHOT</livingdoc.version>
 		<project.source.encoding>UTF-8</project.source.encoding>
-
 
 		<project.root>.</project.root>
 		<project.java.version>1.8</project.java.version>
