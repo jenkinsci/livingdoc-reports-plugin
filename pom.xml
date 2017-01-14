@@ -10,7 +10,7 @@
 
 	<groupId>info.novatec.testit</groupId>
 	<artifactId>livingdoc-jenkins</artifactId>
-	<version>1.3-SNAPSHOT</version>
+	<version>1.4-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>LivingDoc - Jenkins</name>
 	<url>https://github.com/testIT-LivingDoc</url>
@@ -33,7 +33,7 @@
 		<url>git@github.com:Novatec-Consulting-GmbH/ca-aqe-livingdoc-jenkins.git</url>
 	</scm>
 	<properties>
-		<livingdoc.version>1.3-SNAPSHOT</livingdoc.version>
+		<livingdoc.version>1.4-SNAPSHOT</livingdoc.version>
 		<project.source.encoding>UTF-8</project.source.encoding>
 
 		<project.root>.</project.root>
