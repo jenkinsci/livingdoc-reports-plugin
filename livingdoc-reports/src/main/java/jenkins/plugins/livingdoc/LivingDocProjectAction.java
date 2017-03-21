@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -21,6 +22,7 @@ import jenkins.plugins.livingdoc.chart.ProjectSummaryChart;
 
 
 public class LivingDocProjectAction extends Actionable implements ProminentProjectAction {
+    private static final Logger LOGGER = Logger.getLogger(LivingDocProjectAction.class.getCanonicalName());
 
     public static final String LD_CHART_MAX_COUNT_BUILDS = "LD_CHART_MAX_COUNT_BUILDS";
 
@@ -50,7 +52,7 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
 
     private Run< ? , ? > findLatestLivingDocRun() {
 
-        for (Run< ? , ? > run = project.getLastBuild(); run != null; run = run.getPreviousBuild()) {
+        for (Run< ? , ? > run = getLastBuildSafe(); run != null; run = run.getPreviousBuild()) {
 
             if (findBuildAction(run) != null) {
                 return run;
@@ -66,7 +68,7 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
         int maxCountBuilds = getChartMaxCountBuilds();
         int count = 0;
         boolean mayAddEntries = maxCountBuilds == - 1 || count <= maxCountBuilds;
-        for (Run< ? , ? > run = project.getLastBuild(); run != null && mayAddEntries; run = run.getPreviousBuild()) {
+        for (Run< ? , ? > run = getLastBuildSafe(); run != null && mayAddEntries; run = run.getPreviousBuild()) {
 
             LivingDocBuildAction buildAction = findBuildAction(run);
 
@@ -87,19 +89,17 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
     private int getChartMaxCountBuilds() {
 
         int maxCountBuilds = - 1;
-
-        Run< ? , ? > lastRun = project.getLastBuild();
-        if (lastRun != null) {
-            ParametersAction action = lastRun.getAction(ParametersAction.class);
-            if (action != null) {
-                ParameterValue paramValue = action.getParameter(LD_CHART_MAX_COUNT_BUILDS);
-                if (paramValue != null && paramValue instanceof StringParameterValue) {
-                    String stringValue = ( ( StringParameterValue ) paramValue ).value;
-                    maxCountBuilds = Integer.parseInt(stringValue);
+            Run<?, ?> lastRun = getLastBuildSafe();
+            if (lastRun != null) {
+                ParametersAction action = lastRun.getAction(ParametersAction.class);
+                if (action != null) {
+                    ParameterValue paramValue = action.getParameter(LD_CHART_MAX_COUNT_BUILDS);
+                    if (paramValue != null && paramValue instanceof StringParameterValue) {
+                        String stringValue = ((StringParameterValue) paramValue).value;
+                        maxCountBuilds = Integer.parseInt(stringValue);
+                    }
                 }
             }
-        }
-
         return maxCountBuilds;
 
     }
@@ -109,7 +109,7 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
     }
 
     public Graph getGraph() {
-        Calendar timestamp =project.getLastBuild() == null ? Calendar.getInstance() : project.getLastCompletedBuild().getTimestamp();
+        Calendar timestamp = getLastBuildAction()  == null ? Calendar.getInstance() : project.getLastCompletedBuild().getTimestamp();
         
         return new ProjectSummaryChart(timestamp, getAllLivingDocBuildSummaries());
     }
@@ -139,11 +139,21 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
     }
     
     public LivingDocBuildAction getLastBuildAction() {
-        Run<? , ?> run = project.getLastBuild();
-        if (run != null) {
-            return run.getAction(LivingDocBuildAction.class);
-        }
 
+           Run<?, ?> run = getLastBuildSafe();
+           if (run != null) {
+               return run.getAction(LivingDocBuildAction.class);
+           }
+        return null;
+    }
+
+    //Workaround due to jenkins bug
+    private Run<?,?> getLastBuildSafe(){
+        try {
+            return project.getLastBuild();
+        }catch(NullPointerException npe){
+            LOGGER.severe("Last build could not be found for project " + project.getName());
+        }
         return null;
     }
 }
