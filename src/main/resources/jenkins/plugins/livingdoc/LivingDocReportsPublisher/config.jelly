@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
 		 xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
@@ -10,7 +11,7 @@
 	
 	 <j:set var="confluenceConfig" value="${instance.confluenceConfig}"/>
            
-	<f:optionalBlock name="confluenceConfig" title="Publisch to confluence" checked="${instance.publishToConfluence}">
+	<f:optionalBlock name="confluenceConfig" title="Publish to confluence" checked="${instance.publishToConfluence}">
 		<f:entry title="Confluence URL" description="${description.confluenceUrl}" field="confluenceUrl">
 					<f:textbox value="${confluenceConfig.confluenceUrl}" />				
 		</f:entry>

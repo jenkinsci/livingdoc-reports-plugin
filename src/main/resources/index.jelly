@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <div>
 	<img src="${app.rootUrl}plugin/livingdoc-reports/images/ld_logo_16.png"/>
 	This plugin integrates <a href="https://testit-livingdoc.atlassian.net/wiki/">LivingDoc</a> test reports to Jenkins and publishes the results to a confluence instance with LivingDoc support.
