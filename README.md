@@ -1,6 +1,6 @@
 [![License](https://img.shields.io/badge/License-GNU%20General%20Public%20License%203.0-brightgreen.svg)](http://www.gnu.org/licenses/gpl-3.0.txt)
 [![Gitter](https://img.shields.io/badge/Gitter-join%20chat-brightgreen.svg)](https://gitter.im/testIT-LivingDoc/livingdoc-jenkins)
-[![Build Status](https://travis-ci.org/testIT-LivingDoc/livingdoc-jenkins.svg?branch=master)](https://travis-ci.org/testIT-LivingDoc/livingdoc-jenkins)
+[![Build Status](https://travis-ci.org/testIT-LivingDoc/livingdoc-jenkins-reports.svg?branch=master)](https://travis-ci.org/testIT-LivingDoc/livingdoc-jenkins-reports)
 
 
 ![testIT LivingDoc Reports](documentation/images/livingdoc-reports-jenkins-chart.png)
@@ -9,7 +9,15 @@ LivingDoc is a powerful tool that supports implementing collaboration driven met
 
 The jenkins reports plugin parses the execution results of LivingDoc, prepares them to be displayed in jenkins and when needed it publishes them to Confluence
 
+## Install
 
+1. [Get](https://jenkins-ci.org/) Jenkins.
+
+2. Install the [LivingDoc Reports](https://wiki.jenkins-ci.org/display/JENKINS/LivingDoc+Reports+Plugin) plugin.
+
+3. Restart Jenkins.
+
+ 
 ### Documentation
 The [user documentation](https://testit-livingdoc.atlassian.net/wiki) provides in-depth documentation on all the features.
 If you have further questions please get in touch with us.

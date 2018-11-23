@@ -1,32 +1,27 @@
 package jenkins.plugins.livingdoc;
 
+import hudson.model.*;
+import hudson.util.Graph;
+import jenkins.plugins.livingdoc.chart.ProjectSummaryChart;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
-import hudson.model.Actionable;
-import hudson.model.Job;
-import hudson.model.ParameterValue;
-import hudson.model.ParametersAction;
-import hudson.model.ProminentProjectAction;
-import hudson.model.Run;
-import hudson.model.StringParameterValue;
-import hudson.util.Graph;
-import jenkins.plugins.livingdoc.chart.ProjectSummaryChart;
+import java.util.logging.Logger;
 
 
 public class LivingDocProjectAction extends Actionable implements ProminentProjectAction {
+    private static final Logger LOGGER = Logger.getLogger(LivingDocProjectAction.class.getCanonicalName());
 
     public static final String LD_CHART_MAX_COUNT_BUILDS = "LD_CHART_MAX_COUNT_BUILDS";
 
-    private final Job< ? , ? > project;
+    private final Job<?, ?> project;
 
-    public LivingDocProjectAction(Job< ? , ? > job) {
+    public LivingDocProjectAction(Job<?, ?> job) {
         super();
 
         this.project = job;
@@ -34,7 +29,7 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
 
     public void doIndex(StaplerRequest request, StaplerResponse response) throws IOException {
 
-        Run< ? , ? > build = findLatestLivingDocRun();
+        Run<?, ?> build = findLatestLivingDocRun();
 
         if (build == null) {
             response.sendRedirect2("nodata");
@@ -44,13 +39,13 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
         }
     }
 
-    private LivingDocBuildAction findBuildAction(Run< ? , ? > run) {
+    private LivingDocBuildAction findBuildAction(Run<?, ?> run) {
         return run.getAction(LivingDocBuildAction.class);
     }
 
-    private Run< ? , ? > findLatestLivingDocRun() {
+    private Run<?, ?> findLatestLivingDocRun() {
 
-        for (Run< ? , ? > run = project.getLastBuild(); run != null; run = run.getPreviousBuild()) {
+        for (Run<?, ?> run = getLastBuildSafe(); run != null; run = run.getPreviousBuild()) {
 
             if (findBuildAction(run) != null) {
                 return run;
@@ -65,15 +60,15 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
         List<SummaryBuildReportBean> summaries = new ArrayList<SummaryBuildReportBean>();
         int maxCountBuilds = getChartMaxCountBuilds();
         int count = 0;
-        boolean mayAddEntries = maxCountBuilds == - 1 || count <= maxCountBuilds;
-        for (Run< ? , ? > run = project.getLastBuild(); run != null && mayAddEntries; run = run.getPreviousBuild()) {
+        boolean mayAddEntries = maxCountBuilds == -1 || count <= maxCountBuilds;
+        for (Run<?, ?> run = getLastBuildSafe(); run != null && mayAddEntries; run = run.getPreviousBuild()) {
 
             LivingDocBuildAction buildAction = findBuildAction(run);
 
             if (buildAction != null) {
                 summaries.add(buildAction.getSummary());
-                if (maxCountBuilds > - 1) {
-                    count ++ ;
+                if (maxCountBuilds > -1) {
+                    count++;
                     mayAddEntries = count < maxCountBuilds;
                 }
             }
@@ -86,20 +81,17 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
 
     private int getChartMaxCountBuilds() {
 
-        int maxCountBuilds = - 1;
-
-        Run< ? , ? > lastRun = project.getLastBuild();
+        int maxCountBuilds = -1;
+        Run<?, ?> lastRun = getLastBuildSafe();
         if (lastRun != null) {
             ParametersAction action = lastRun.getAction(ParametersAction.class);
             if (action != null) {
                 ParameterValue paramValue = action.getParameter(LD_CHART_MAX_COUNT_BUILDS);
-                if (paramValue != null && paramValue instanceof StringParameterValue) {
-                    String stringValue = ( ( StringParameterValue ) paramValue ).value;
-                    maxCountBuilds = Integer.parseInt(stringValue);
+                if (paramValue instanceof StringParameterValue && paramValue.getValue() != null) {
+                    maxCountBuilds = Integer.parseInt((String) paramValue.getValue());
                 }
             }
         }
-
         return maxCountBuilds;
 
     }
@@ -109,8 +101,8 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
     }
 
     public Graph getGraph() {
-        Calendar timestamp =project.getLastBuild() == null ? Calendar.getInstance() : project.getLastCompletedBuild().getTimestamp();
-        
+        Calendar timestamp = getLastBuildAction() == null ? Calendar.getInstance() : project.getLastCompletedBuild().getTimestamp();
+
         return new ProjectSummaryChart(timestamp, getAllLivingDocBuildSummaries());
     }
 
@@ -118,7 +110,7 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
         return ResourceUtils.BIG_ICON_URL;
     }
 
-    public Job< ? , ? > getProject() {
+    public Job<?, ?> getProject() {
         return project;
     }
 
@@ -137,13 +129,23 @@ public class LivingDocProjectAction extends Actionable implements ProminentProje
     public boolean hasSummaries() {
         return getAllLivingDocBuildSummaries().size() > 0;
     }
-    
+
     public LivingDocBuildAction getLastBuildAction() {
-        Run<? , ?> run = project.getLastBuild();
+
+        Run<?, ?> run = getLastBuildSafe();
         if (run != null) {
             return run.getAction(LivingDocBuildAction.class);
         }
+        return null;
+    }
 
+    //Workaround due to jenkins bug
+    private Run<?, ?> getLastBuildSafe() {
+        try {
+            return project.getLastBuild();
+        } catch (NullPointerException npe) {
+            LOGGER.severe("Last build could not be found for project " + project.getName());
+        }
         return null;
     }
 }
